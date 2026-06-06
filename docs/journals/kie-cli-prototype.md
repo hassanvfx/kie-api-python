@@ -23,7 +23,54 @@
 | Task 18 | 2026-06-06 | Complete | Expanded README and MCP documentation with exhaustive CLI/MCP parameters, usage cases, and token safety guidance. |
 | Task 19 | 2026-06-06 | Complete | Clarified where external cloners should put KIE tokens for CLI and MCP usage. |
 | Task 20 | 2026-06-06 | Complete | Drafted a four-week LinkedIn campaign with post text, GitHub CTA, and consistent image-generation prompts. |
-| Task 21 | 2026-06-06 | In Progress | Add weekday scheduling labels to each LinkedIn campaign post. |
+| Task 21 | 2026-06-06 | Complete | Added weekday scheduling labels to each LinkedIn campaign post. |
+| Task 22 | 2026-06-06 | In Progress | Make LinkedIn posts copy-ready with fenced blocks and replace image prompts with consistent deck-slide style prompts. |
+
+---
+
+## Task 22: Copy-Ready LinkedIn Posts and Deck-Slide Image Prompts
+
+### Request
+
+Make each LinkedIn post easier to copy by putting the post text in fenced blocks, move the weekday next to each post heading, and replace the image prompts with a more consistent cool deck-slide style.
+
+### Implementation Summary
+
+- Updated all 15 post headings to include the scheduled weekday and week.
+- Converted all 15 LinkedIn post bodies into fenced `text` blocks that include the GitHub link.
+- Converted all 15 image prompts into fenced `text` blocks for easy copying.
+- Replaced the image prompt style with a consistent viral LinkedIn deck-slide/carousel direction:
+  - matte graphite background
+  - cyan and acid-emerald gradients
+  - crisp glass panels
+  - isometric/vector icons
+  - bold minimal typography
+  - Figma/Keynote-quality technical slide layouts
+
+### Status
+
+Complete.
+
+### Verification
+
+Validated campaign structure:
+
+```text
+weekday_headings=15
+linkedin_copy=15
+image_prompts=15
+text_fences=30
+fence_closes=30
+```
+
+Ran:
+
+```bash
+git diff --check
+.venv/bin/python -m pytest -q
+```
+
+Result: no whitespace errors; 62 passed, 11 skipped.
 
 ---
 

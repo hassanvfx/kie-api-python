@@ -14,15 +14,15 @@ Give any agent instant creative API access without hand-wiring endpoints, payloa
 
 Visual system for all images:
 
-- cinematic dark graphite background
-- glassy command terminal and agent workflow panels
-- cyan and emerald accent lighting
-- subtle KIE/API/MCP/network motifs
-- one human principal-engineer presence or hand only when useful
-- clean composition, high contrast, premium open-source launch feel
-- no readable fake UI text unless specified
-- no logos except a small abstract GitHub-style code repository symbol
-- 16:9 aspect ratio
+- viral LinkedIn deck-slide style, not wallpaper
+- 16:9 presentation slide / technical carousel cover
+- matte graphite or near-black background with subtle grid
+- cyan and acid-emerald gradients
+- crisp glass panels, isometric/vector icons, and clean arrows
+- bold minimal typography with only the requested slide title
+- strong margins, clear hierarchy, high contrast
+- Figma/Keynote-quality principal-engineer launch aesthetic
+- no fake UI text, no brand logos, no clutter
 
 Suggested posting schedule:
 
@@ -50,12 +50,11 @@ Suggested posting schedule:
 
 Goal: make the tool feel immediately useful before diving into implementation details.
 
-### Post 1: Launch
+### Monday (Week 1) - Post 1: Launch
 
-Scheduled Day: Monday, Week 1
+LinkedIn copy:
 
-Text:
-
+```text
 I spent the last year working with KIE.AI workflows.
 
 Today I open sourced the tool I wish every agent had by default:
@@ -75,17 +74,19 @@ Dry-run first. Token-safe by default. Async jobs handled. Local uploads handled.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a cinematic 16:9 editorial tech launch image in a dark graphite workspace. Show a principal engineer's desk with a glowing glass terminal labeled only with abstract code shapes, an agent network diagram flowing into creative outputs: image frame, video strip, music waveform, and chat bubble icons. Use cyan and emerald rim lighting, premium open-source launch aesthetic, crisp high contrast, shallow depth of field. Include a small abstract repository symbol, no readable fake UI text, no brand logos, no clutter.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Agents, meet KIE". Create a launch slide with a central glowing MCP hub connecting to five clean icon tiles: image, video, music, chat, and upload. Add a small repository cube in one corner. The slide should feel like a polished open-source launch keynote cover.
+```
 
-### Post 2: The Convenience Pitch
+### Tuesday (Week 1) - Post 2: The Convenience Pitch
 
-Scheduled Day: Tuesday, Week 1
+LinkedIn copy:
 
-Text:
-
+```text
 The annoying part of creative AI APIs is rarely the first request.
 
 It is everything around it:
@@ -105,17 +106,19 @@ So your agent can go from idea to KIE job without rediscovering the plumbing.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic diagram-style image in the same dark graphite, cyan, and emerald visual style. Show a messy tangle of API tasks on the left represented by abstract nodes for upload, payload, polling, callbacks, token safety, and outputs, transforming into a clean single glowing pipeline on the right labeled visually with icons only. Premium principal-engineer tool aesthetic, glass panels, high contrast, no readable text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Stop rebuilding API glue". Create a before/after slide: left side shows tangled abstract integration nodes, right side shows one clean pipeline into KIE workflows. Use visual icons for upload, payloads, polling, callbacks, token safety, and outputs; no labels except the title.
+```
 
-### Post 3: CLI + MCP
+### Wednesday (Week 1) - Post 3: CLI + MCP
 
-Scheduled Day: Wednesday, Week 1
+LinkedIn copy:
 
-Text:
-
+```text
 I did not want this to be only a CLI.
 
 CLIs are great for humans.
@@ -134,17 +137,19 @@ That means an agent can inspect the supported models, dry-run a payload, submit 
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 split-but-unified editorial tech image. Left side: a sleek command-line terminal represented by glass panels and code glyphs. Right side: an agent interface represented by connected nodes and tool cards. Both flow into the same glowing KIE creative API core in the center. Dark graphite background, cyan and emerald lighting, premium open-source engineering style, no readable UI text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "CLI for humans. MCP for agents.". Create a split architecture slide: left panel is a terminal-shaped block, right panel is an agent-tool graph, both converging into a shared KIE API core. Make it clean, symmetrical, and executive-demo ready.
+```
 
-### Post 4: Dry Run First
+### Thursday (Week 1) - Post 4: Dry Run First
 
-Scheduled Day: Thursday, Week 1
+LinkedIn copy:
 
-Text:
-
+```text
 One design choice I care about:
 
 Every expensive MCP submit tool defaults to `dry_run=true`.
@@ -166,10 +171,14 @@ They should also be careful.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic safety-first agent image. Show an AI agent workflow pausing at a glowing checkpoint labeled visually with a shield/checkmark icon before flowing into creative API outputs. Include abstract payload cards, a credit meter icon, and a job polling loop. Dark graphite, cyan and emerald accents, premium engineering aesthetic, high clarity, no readable fake text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Dry-run before spend". Create a safety-checkpoint slide showing an agent workflow paused at a glowing shield/check node before entering live API execution. Include small abstract credit meter, payload card, and polling loop icons.
+```
+
 
 ---
 
@@ -177,12 +186,11 @@ Create a 16:9 cinematic safety-first agent image. Show an AI agent workflow paus
 
 Goal: demonstrate concrete implementations while reminding people the same interface handles other media types.
 
-### Post 5: Image Generation Example
+### Monday (Week 2) - Post 5: Image Generation Example
 
-Scheduled Day: Monday, Week 2
+LinkedIn copy:
 
-Text:
-
+```text
 Example workflow:
 
 Ask an agent to generate an image with KIE.
@@ -204,17 +212,19 @@ The same MCP server also supports video, chat, upload, Suno music, lyrics, sound
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic image-generation workflow scene. Show an agent node calling a glowing image-generation tool, then an async job loop, then a polished product image frame emerging at the end. Keep the same dark graphite, cyan, and emerald editorial style. Include subtle glass cards and a progress ring. No readable fake text, no logos, premium open-source engineering launch feel.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Image jobs through MCP". Create a process slide with six numbered-looking visual stages but no readable numbers: dry-run, inspect payload, submit, job ID, wait, generated image. End with a polished image frame tile. Keep it clean and diagrammatic.
+```
 
-### Post 6: Song Generation Example
+### Tuesday (Week 2) - Post 6: Song Generation Example
 
-Scheduled Day: Tuesday, Week 2
+LinkedIn copy:
 
-Text:
-
+```text
 I also tested Suno music generation through MCP.
 
 The useful lesson:
@@ -235,17 +245,19 @@ That is exactly the kind of operational detail I want agents to stop reimplement
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic music-generation workflow image in the same style. Show an agent network sending a prompt into a glowing audio pipeline, with waveform arcs, album-art tiles, and async polling loops. Include subtle callback-route motif as connected nodes. Dark graphite background, cyan and emerald lighting, premium technical look, no readable text, no brand logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Music jobs need orchestration". Create a music workflow slide with a prompt card flowing through callback, provider model, saved job, polling, and MP3 output icons. Use waveform geometry and album-art tiles in the same deck style.
+```
 
-### Post 7: Async Polling
+### Wednesday (Week 2) - Post 7: Async Polling
 
-Scheduled Day: Wednesday, Week 2
+LinkedIn copy:
 
-Text:
-
+```text
 Async APIs are where quick prototypes become fragile.
 
 For KIE workflows, a submit call is often only the first step.
@@ -265,17 +277,19 @@ For agents, this becomes `kie_wait_for_job`.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 premium technical image focused on async job polling. Show a glowing circular polling loop around a job ID token, with multiple provider endpoint paths converging into normalized output cards. Dark graphite, glass UI panels, cyan/emerald highlights, crisp diagrammatic composition, no readable text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Async is the real work". Create a technical slide centered on a luminous polling loop around a job token. Multiple endpoint paths converge into normalized output cards. Make it feel like an elegant systems diagram.
+```
 
-### Post 8: Upload-First Media
+### Thursday (Week 2) - Post 8: Upload-First Media
 
-Scheduled Day: Thursday, Week 2
+LinkedIn copy:
 
-Text:
-
+```text
 A small detail that makes agent workflows much nicer:
 
 Local media references are upload-first.
@@ -295,10 +309,14 @@ That matters for image-to-image, image-to-video, and multimodal chat workflows.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic upload-first media workflow image. Show a local image file tile transforming into a secure cloud URL node, then flowing into image, video, and chat tool cards. Use the campaign style: dark graphite workspace, glass panels, cyan and emerald lighting, premium engineering quality, no readable fake text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Local files become agent-ready URLs". Create a slide showing a local file tile transforming into a secure URL node, then branching into image-to-image, image-to-video, and multimodal chat icons. Keep the transformation visually obvious.
+```
+
 
 ---
 
@@ -306,12 +324,11 @@ Create a 16:9 cinematic upload-first media workflow image. Show a local image fi
 
 Goal: explain why this is built for agents, not just wrapped for demos.
 
-### Post 9: MCP Resources
+### Monday (Week 3) - Post 9: MCP Resources
 
-Scheduled Day: Monday, Week 3
+LinkedIn copy:
 
-Text:
-
+```text
 The MCP server does not only expose tools.
 
 It also exposes resources.
@@ -334,17 +351,19 @@ No network fetch required after install.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic image of an agent reading package-local resources. Show glowing resource cards stored inside a code package cube, connected to tool nodes. Use dark graphite, cyan/emerald highlights, clean glassmorphism, high contrast, premium open-source engineering aesthetic, no readable text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Tools are not enough". Create a slide showing an MCP server exposing both tool cards and resource cards. Package-local resources should appear as cards inside a Python package cube, connected to an agent node.
+```
 
-### Post 10: Token Safety
+### Tuesday (Week 3) - Post 10: Token Safety
 
-Scheduled Day: Tuesday, Week 3
+LinkedIn copy:
 
-Text:
-
+```text
 Agent tools need boring security details.
 
 For this project:
@@ -362,17 +381,19 @@ The goal is "make agents useful without making them reckless."
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic token-safety image. Show a glowing key locked inside a private local environment vault, while an agent workflow accesses tools without exposing the key. Include shield icons, ignored output folders as abstract dark tiles, and clean secure pipelines. Dark graphite, cyan and emerald accents, premium engineering style, no readable text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Powerful agents need boring security". Create a security slide with a private .env vault icon, placeholder config cards, ignored outputs, and an agent using tools without seeing the key. Strong shield motif, clean and serious, still visually cool.
+```
 
-### Post 11: Contributor Angle
+### Wednesday (Week 3) - Post 11: Contributor Angle
 
-Scheduled Day: Wednesday, Week 3
+LinkedIn copy:
 
-Text:
-
+```text
 KIE's API surface is bigger than this first implementation.
 
 That is why the repo is designed for contributors.
@@ -390,17 +411,19 @@ I want this to become a living agent-access layer for KIE workflows.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic open-source contributor image. Show multiple abstract developer nodes adding new endpoint cards into a shared MCP/CLI framework. Include clean modular blocks for payload, route, status, tests, docs, resources. Dark graphite background, cyan/emerald lighting, premium collaborative engineering style, no readable fake text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Add endpoints. Keep the contract.". Create a contributor workflow slide with modular blocks for docs, payload builder, routing, status normalization, CLI, MCP, tests, and resources snapping into a shared framework.
+```
 
-### Post 12: Real MCP Test
+### Thursday (Week 3) - Post 12: Real MCP Test
 
-Scheduled Day: Thursday, Week 3
+LinkedIn copy:
 
-Text:
-
+```text
 This was not just wired theoretically.
 
 I tested the real MCP path:
@@ -424,10 +447,14 @@ That is the difference between a wrapper and a usable agent tool.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic validation image showing a real end-to-end MCP pipeline. Include connected stages from MCP client to server to API to polling to generated outputs. Add checkmarks as abstract icons, not text. Dark graphite, cyan and emerald highlights, glass panels, premium launch aesthetic, no readable fake UI, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Tested end to end". Create an end-to-end validation slide: MCP client to kie-mcp to KIE API to async polling to generated media outputs. Use check icons and clean pipeline arrows, no extra text.
+```
+
 
 ---
 
@@ -435,12 +462,11 @@ Create a 16:9 cinematic validation image showing a real end-to-end MCP pipeline.
 
 Goal: show a random concrete implementation, then pull back to the wider value.
 
-### Post 13: Specific Implementation - Product Render Agent
+### Monday (Week 4) - Post 13: Specific Implementation - Product Render Agent
 
-Scheduled Day: Monday, Week 4
+LinkedIn copy:
 
-Text:
-
+```text
 Specific implementation idea:
 
 Build a product-render agent.
@@ -466,17 +492,19 @@ turn the render into video, generate a soundtrack, or ask chat to write launch c
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic product-render agent scene. Show a luxury glass perfume bottle product render being generated from a brief and reference image, with an agent workflow pipeline beside it. Include subtle downstream icons for video, music, and copywriting. Dark graphite studio, cyan and emerald rim lights, premium commercial photography mixed with technical glass panels, no readable text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Build a product-render agent". Create a product-render agent slide showing a premium perfume bottle render tile generated from a brief card and reference image card. Show downstream branches to video, soundtrack, and launch copy icons.
+```
 
-### Post 14: Why Principal Engineers Should Care
+### Tuesday (Week 4) - Post 14: Why Principal Engineers Should Care
 
-Scheduled Day: Tuesday, Week 4
+LinkedIn copy:
 
-Text:
-
+```text
 As a principal engineer, I care about tools that remove repeated integration work.
 
 This repo is not trying to be magical.
@@ -496,17 +524,19 @@ That is the part every serious agent workflow eventually needs.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic principal-engineer architecture image. Show a calm senior engineer reviewing a clean modular system map of CLI, MCP, payloads, routes, polling, resources, and tests. Dark graphite office, cyan/emerald highlights, premium thoughtful engineering aesthetic, no readable UI text, no logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Reduce repeated integration work". Create a principal-engineer architecture slide showing clean system blocks for CLI, MCP, payloads, routes, polling, docs, resources, and tests. Calm, authoritative, minimal, boardroom-ready.
+```
 
-### Post 15: Contributor CTA
+### Wednesday (Week 4) - Post 15: Contributor CTA
 
-Scheduled Day: Wednesday, Week 4
+LinkedIn copy:
 
-Text:
-
+```text
 If you are building agents that need creative APIs, this is for you.
 
 If you are using KIE.AI and want a faster path from agent intent to real jobs, this is for you.
@@ -527,7 +557,10 @@ Open source is how this gets better.
 
 GitHub:
 https://github.com/hassanvfx/kie-api-python
+```
 
 Image prompt:
 
-Create a 16:9 cinematic final campaign image. Show an open-source repository as a glowing launchpad where multiple agent workflows branch into image, video, music, chat, and upload outputs. Use the same dark graphite background, cyan and emerald light, glass panels, high contrast, premium engineering launch style. Add a subtle invitation feeling with connected contributor nodes. No readable fake text, no brand logos.
+```text
+Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested, no extra readable words, no fake UI text, no brand logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Open-source agent access for KIE". Create a final call-to-action slide with an open-source repository launchpad branching into image, video, music, chat, upload, and contributor nodes. Make it feel like the closing slide of a high-energy technical launch deck.
+```
