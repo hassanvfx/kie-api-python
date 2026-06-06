@@ -4,6 +4,8 @@
 
 This project is intentionally open-source friendly: local secrets stay in `.env`, generated media and live-test outputs are ignored, and contributors are encouraged to keep the implementation aligned with the upstream KIE documentation.
 
+It also includes an MCP server, `kie-mcp`, so agents can access KIE workflows through tools, resources, and prompts.
+
 ## What It Supports
 
 Current CLI surface:
@@ -127,6 +129,22 @@ Useful live-test environment variables:
 - `KIE_SUNO_CALLBACK_URL=https://your-callback.example/path`
 
 Live test outputs are written under `outputs/`, which is ignored by Git.
+
+## Agent / MCP Usage
+
+Install MCP support:
+
+```bash
+.venv/bin/python -m pip install -e ".[dev,mcp]"
+```
+
+Start the MCP server:
+
+```bash
+.venv/bin/kie-mcp
+```
+
+MCP clients normally launch the server for you. Example configs live in `examples/mcp/`, and full setup details are in [docs/mcp.md](docs/mcp.md).
 
 ## Project Layout
 

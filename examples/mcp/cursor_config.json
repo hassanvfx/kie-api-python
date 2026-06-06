@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "kie-api": {
+      "command": "/Users/hassan/repos/kie-api/.venv/bin/kie-mcp",
+      "env": {
+        "KIE_API_KEY": "replace_with_your_kie_api_key"
+      }
+    }
+  }
+}
