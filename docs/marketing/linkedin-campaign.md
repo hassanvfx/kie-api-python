@@ -24,6 +24,26 @@ Visual system for all images:
 - no logos except a small abstract GitHub-style code repository symbol
 - 16:9 aspect ratio
 
+Suggested posting schedule:
+
+| Week | Day | Post | Topic |
+|---|---|---:|---|
+| Week 1 | Monday | 1 | Launch |
+| Week 1 | Tuesday | 2 | The Convenience Pitch |
+| Week 1 | Wednesday | 3 | CLI + MCP |
+| Week 1 | Thursday | 4 | Dry Run First |
+| Week 2 | Monday | 5 | Image Generation Example |
+| Week 2 | Tuesday | 6 | Song Generation Example |
+| Week 2 | Wednesday | 7 | Async Polling |
+| Week 2 | Thursday | 8 | Upload-First Media |
+| Week 3 | Monday | 9 | MCP Resources |
+| Week 3 | Tuesday | 10 | Token Safety |
+| Week 3 | Wednesday | 11 | Contributor Angle |
+| Week 3 | Thursday | 12 | Real MCP Test |
+| Week 4 | Monday | 13 | Product Render Agent |
+| Week 4 | Tuesday | 14 | Why Principal Engineers Should Care |
+| Week 4 | Wednesday | 15 | Contributor CTA |
+
 ---
 
 ## Week 1: Convenience First
@@ -31,6 +51,8 @@ Visual system for all images:
 Goal: make the tool feel immediately useful before diving into implementation details.
 
 ### Post 1: Launch
+
+Scheduled Day: Monday, Week 1
 
 Text:
 
@@ -60,6 +82,8 @@ Create a cinematic 16:9 editorial tech launch image in a dark graphite workspace
 
 ### Post 2: The Convenience Pitch
 
+Scheduled Day: Tuesday, Week 1
+
 Text:
 
 The annoying part of creative AI APIs is rarely the first request.
@@ -88,6 +112,8 @@ Create a 16:9 cinematic diagram-style image in the same dark graphite, cyan, and
 
 ### Post 3: CLI + MCP
 
+Scheduled Day: Wednesday, Week 1
+
 Text:
 
 I did not want this to be only a CLI.
@@ -114,6 +140,8 @@ Image prompt:
 Create a 16:9 split-but-unified editorial tech image. Left side: a sleek command-line terminal represented by glass panels and code glyphs. Right side: an agent interface represented by connected nodes and tool cards. Both flow into the same glowing KIE creative API core in the center. Dark graphite background, cyan and emerald lighting, premium open-source engineering style, no readable UI text, no logos.
 
 ### Post 4: Dry Run First
+
+Scheduled Day: Thursday, Week 1
 
 Text:
 
@@ -151,6 +179,8 @@ Goal: demonstrate concrete implementations while reminding people the same inter
 
 ### Post 5: Image Generation Example
 
+Scheduled Day: Monday, Week 2
+
 Text:
 
 Example workflow:
@@ -181,6 +211,8 @@ Create a 16:9 cinematic image-generation workflow scene. Show an agent node call
 
 ### Post 6: Song Generation Example
 
+Scheduled Day: Tuesday, Week 2
+
 Text:
 
 I also tested Suno music generation through MCP.
@@ -210,6 +242,8 @@ Create a 16:9 cinematic music-generation workflow image in the same style. Show 
 
 ### Post 7: Async Polling
 
+Scheduled Day: Wednesday, Week 2
+
 Text:
 
 Async APIs are where quick prototypes become fragile.
@@ -237,6 +271,8 @@ Image prompt:
 Create a 16:9 premium technical image focused on async job polling. Show a glowing circular polling loop around a job ID token, with multiple provider endpoint paths converging into normalized output cards. Dark graphite, glass UI panels, cyan/emerald highlights, crisp diagrammatic composition, no readable text, no logos.
 
 ### Post 8: Upload-First Media
+
+Scheduled Day: Thursday, Week 2
 
 Text:
 
@@ -272,6 +308,8 @@ Goal: explain why this is built for agents, not just wrapped for demos.
 
 ### Post 9: MCP Resources
 
+Scheduled Day: Monday, Week 3
+
 Text:
 
 The MCP server does not only expose tools.
@@ -303,6 +341,8 @@ Create a 16:9 cinematic image of an agent reading package-local resources. Show 
 
 ### Post 10: Token Safety
 
+Scheduled Day: Tuesday, Week 3
+
 Text:
 
 Agent tools need boring security details.
@@ -329,6 +369,8 @@ Create a 16:9 cinematic token-safety image. Show a glowing key locked inside a p
 
 ### Post 11: Contributor Angle
 
+Scheduled Day: Wednesday, Week 3
+
 Text:
 
 KIE's API surface is bigger than this first implementation.
@@ -354,6 +396,8 @@ Image prompt:
 Create a 16:9 cinematic open-source contributor image. Show multiple abstract developer nodes adding new endpoint cards into a shared MCP/CLI framework. Include clean modular blocks for payload, route, status, tests, docs, resources. Dark graphite background, cyan/emerald lighting, premium collaborative engineering style, no readable fake text, no logos.
 
 ### Post 12: Real MCP Test
+
+Scheduled Day: Thursday, Week 3
 
 Text:
 
@@ -393,6 +437,8 @@ Goal: show a random concrete implementation, then pull back to the wider value.
 
 ### Post 13: Specific Implementation - Product Render Agent
 
+Scheduled Day: Monday, Week 4
+
 Text:
 
 Specific implementation idea:
@@ -427,6 +473,8 @@ Create a 16:9 cinematic product-render agent scene. Show a luxury glass perfume 
 
 ### Post 14: Why Principal Engineers Should Care
 
+Scheduled Day: Tuesday, Week 4
+
 Text:
 
 As a principal engineer, I care about tools that remove repeated integration work.
@@ -454,6 +502,8 @@ Image prompt:
 Create a 16:9 cinematic principal-engineer architecture image. Show a calm senior engineer reviewing a clean modular system map of CLI, MCP, payloads, routes, polling, resources, and tests. Dark graphite office, cyan/emerald highlights, premium thoughtful engineering aesthetic, no readable UI text, no logos.
 
 ### Post 15: Contributor CTA
+
+Scheduled Day: Wednesday, Week 4
 
 Text:
 

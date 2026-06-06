@@ -22,7 +22,35 @@
 | Task 17 | 2026-06-06 | Complete | Ran live image generation and Suno music generation through the MCP server, then polled both jobs to success. |
 | Task 18 | 2026-06-06 | Complete | Expanded README and MCP documentation with exhaustive CLI/MCP parameters, usage cases, and token safety guidance. |
 | Task 19 | 2026-06-06 | Complete | Clarified where external cloners should put KIE tokens for CLI and MCP usage. |
-| Task 20 | 2026-06-06 | In Progress | Draft a four-week LinkedIn campaign with post text, GitHub CTA, and consistent image-generation prompts. |
+| Task 20 | 2026-06-06 | Complete | Drafted a four-week LinkedIn campaign with post text, GitHub CTA, and consistent image-generation prompts. |
+| Task 21 | 2026-06-06 | In Progress | Add weekday scheduling labels to each LinkedIn campaign post. |
+
+---
+
+## Task 21: LinkedIn Campaign Weekday Labels
+
+### Request
+
+Add the day of week to each LinkedIn post so the publishing cadence is easy to follow.
+
+### Implementation Summary
+
+- Added a suggested posting schedule table near the top of `docs/marketing/linkedin-campaign.md`.
+- Added `Scheduled Day` labels under all 15 post headings.
+- Preserved the existing four-week cadence:
+  - Week 1: Monday through Thursday
+  - Week 2: Monday through Thursday
+  - Week 3: Monday through Thursday
+  - Week 4: Monday through Wednesday
+
+### Status
+
+Complete.
+
+### Verification
+
+- Confirmed 15 `Scheduled Day` labels in `docs/marketing/linkedin-campaign.md`.
+- `git diff --check` passed with no whitespace errors.
 
 ---
 
