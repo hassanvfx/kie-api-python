@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "tools": [
+    {
+      "name": "kie_upload_file",
+      "liveCall": true,
+      "supportsDryRun": true,
+      "required": ["file_path"],
+      "notes": "Uploads a local file to KIE temporary storage."
+    },
+    {
+      "name": "kie_generate_image",
+      "liveCall": true,
+      "supportsDryRun": true,
+      "required": ["model", "prompt"],
+      "models": ["nano-banana-pro", "gpt-image-2"],
+      "notes": "Submits an async image job. Reference images can be local paths or remote URLs."
+    },
+    {
+      "name": "kie_generate_video",
+      "liveCall": true,
+      "supportsDryRun": true,
+      "required": ["model", "prompt"],
+      "models": ["grok", "veo3"],
+      "notes": "Submits an async video job."
+    },
+    {
+      "name": "kie_chat_completion",
+      "liveCall": true,
+      "supportsDryRun": true,
+      "required": ["model", "prompt"],
+      "models": ["gpt-5-2", "gemini-3-pro"],
+      "notes": "Runs a synchronous chat completion, optionally with image URLs or local image files."
+    },
+    {
+      "name": "kie_suno_music",
+      "liveCall": true,
+      "supportsDryRun": true,
+      "required": ["prompt"],
+      "models": ["suno-music"],
+      "notes": "Submits an async Suno music generation job."
+    },
+    {
+      "name": "kie_suno_lyrics",
+      "liveCall": true,
+      "supportsDryRun": true,
+      "required": ["prompt"],
+      "models": ["suno-lyrics"],
+      "notes": "Submits an async Suno lyrics generation job."
+    },
+    {
+      "name": "kie_suno_sounds",
+      "liveCall": true,
+      "supportsDryRun": true,
+      "required": ["prompt"],
+      "models": ["suno-sounds"],
+      "notes": "Submits an async Suno sounds generation job."
+    },
+    {
+      "name": "kie_get_job_status",
+      "liveCall": true,
+      "supportsDryRun": false,
+      "required": ["job_id", "model"],
+      "notes": "Reads a single async job status by model-routed endpoint."
+    },
+    {
+      "name": "kie_wait_for_job",
+      "liveCall": true,
+      "supportsDryRun": false,
+      "required": ["job_id", "model"],
+      "notes": "Polls until terminal state or timeout."
+    }
+  ]
+}

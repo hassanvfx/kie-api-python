@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "source": "https://docs.kie.ai/",
+  "description": "Agent-readable summary of the focused KIE workflows implemented by this repository.",
+  "workflows": [
+    {
+      "family": "upload",
+      "models": [],
+      "sync": true,
+      "tools": ["kie_upload_file"],
+      "notes": "Uploads a local file to KIE temporary storage and returns a downloadUrl."
+    },
+    {
+      "family": "image",
+      "models": ["nano-banana-pro", "gpt-image-2"],
+      "sync": false,
+      "tools": ["kie_generate_image"],
+      "notes": "gpt-image-2 chooses text-to-image or image-to-image based on reference images."
+    },
+    {
+      "family": "video",
+      "models": ["grok", "veo3"],
+      "sync": false,
+      "tools": ["kie_generate_video"],
+      "notes": "grok maps to Market routes; veo3 supports veo3, veo3_fast, and veo3_lite variants."
+    },
+    {
+      "family": "chat",
+      "models": ["gpt-5-2", "gemini-3-pro"],
+      "sync": true,
+      "tools": ["kie_chat_completion"],
+      "notes": "OpenAI-compatible chat completion workflows with optional image inputs."
+    },
+    {
+      "family": "suno",
+      "models": ["suno-music", "suno-lyrics", "suno-sounds"],
+      "sync": false,
+      "tools": ["kie_suno_music", "kie_suno_lyrics", "kie_suno_sounds"],
+      "notes": "Async audio workflows. Some live Suno flows may require callback URLs."
+    },
+    {
+      "family": "async-jobs",
+      "models": [
+        "nano-banana-pro",
+        "gpt-image-2-text-to-image",
+        "gpt-image-2-image-to-image",
+        "grok-imagine/text-to-video",
+        "grok-imagine/image-to-video",
+        "veo3",
+        "veo3_fast",
+        "veo3_lite",
+        "suno-music",
+        "suno-lyrics",
+        "suno-sounds"
+      ],
+      "sync": true,
+      "tools": ["kie_get_job_status", "kie_wait_for_job"],
+      "notes": "Status routing is model-based. Prefer saved job records when available."
+    }
+  ]
+}

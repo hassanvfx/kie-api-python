@@ -45,6 +45,16 @@ Add an MCP-style agent interface so Codex and other agents can use KIE workflows
 
 In progress.
 
+### Implementation Notes
+
+- Commit `22f3a45` added open-source project basics:
+  - MIT `LICENSE`
+  - `CONTRIBUTING.md`
+  - `SECURITY.md`
+  - GitHub Actions unit-test workflow
+  - README license/contribution links
+- Added package-local MCP resources under `src/kie_cli/mcp_resources/` so installed agents can read compact KIE context without GitHub Raw or network access.
+
 ---
 
 ## Task 14: Initial GitHub Publish
