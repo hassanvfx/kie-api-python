@@ -50,6 +50,44 @@ Most MCP clients launch the server over stdio automatically.
 
 The safest rule: agents may use the token, but should never see, print, summarize, or store the token.
 
+### For External Cloners
+
+External users bring their own KIE token. The repository never ships one.
+
+Recommended setup:
+
+```bash
+git clone git@github.com:hassanvfx/kie-api-python.git
+cd kie-api-python
+python3 -m venv .venv
+.venv/bin/python -m pip install -e ".[dev,mcp]"
+cp .env.example .env
+```
+
+Then they edit `.env`:
+
+```env
+KIE_API_KEY=their_own_kie_api_key
+KIE_BASE_URL=https://api.kie.ai
+KIE_UPLOAD_BASE_URL=https://kieai.redpandaai.co
+```
+
+For MCP clients, they can choose one of two safe approaches:
+
+1. Let `kie-mcp` load the local `.env`.
+2. Put `KIE_API_KEY` in their private MCP client config `env` block.
+
+They should not edit committed example JSON files with a real key.
+
+### `.env` vs JSON Config
+
+| Location | Real token? | Safe to commit? | Notes |
+|---|---:|---:|---|
+| `.env.example` | No | Yes | Documents variable names only. |
+| `.env` | Yes | No | Ignored by Git and used by local CLI/MCP runs. |
+| `examples/mcp/*.json` | No | Yes | Placeholder examples only. |
+| Private MCP client config | Optional | No | Good place for real `KIE_API_KEY` if the client supports private config. |
+
 ### Safe Places For `KIE_API_KEY`
 
 | Context | Recommended Storage | Notes |
@@ -87,6 +125,8 @@ The safest rule: agents may use the token, but should never see, print, summariz
 ```
 
 Commit only placeholders. Put the real key in your private client config.
+
+Alternative safe pattern: omit the `env` block and let `kie-mcp` read the local `.env`, as long as the server is launched in an environment that can resolve that `.env`.
 
 ### Pre-Push Safety Checks
 

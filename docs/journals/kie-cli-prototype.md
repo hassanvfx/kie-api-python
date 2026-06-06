@@ -20,7 +20,38 @@
 | Task 15 | 2026-06-06 | Complete | Added an agent-ready MCP server, package-local MCP resources, open-source docs, tests, and rollback-friendly commits. |
 | Task 16 | 2026-06-06 | Complete | Installed and validated the real MCP server over stdio, including dry-run tool calls and live KIE smoke testing when credentials permit. |
 | Task 17 | 2026-06-06 | Complete | Ran live image generation and Suno music generation through the MCP server, then polled both jobs to success. |
-| Task 18 | 2026-06-06 | In Progress | Expand README and MCP documentation with exhaustive CLI/MCP parameters, usage cases, and token safety guidance. |
+| Task 18 | 2026-06-06 | Complete | Expanded README and MCP documentation with exhaustive CLI/MCP parameters, usage cases, and token safety guidance. |
+| Task 19 | 2026-06-06 | In Progress | Clarify where external cloners should put KIE tokens for CLI and MCP usage. |
+
+---
+
+## Task 19: Clarify External Token Setup
+
+### Request
+
+Clarify whether external cloners should put the real KIE token in `.env` or MCP JSON config.
+
+### Implementation Summary
+
+- Added explicit `.env` vs MCP JSON tables to `README.md` and `docs/mcp.md`.
+- Documented the external clone/setup flow.
+- Clarified that committed `examples/mcp/*.json` files must contain placeholders only.
+- Clarified the two safe MCP approaches:
+  - let `kie-mcp` load local `.env`
+  - put `KIE_API_KEY` in private MCP client config outside Git
+
+### Status
+
+Complete.
+
+### Verification
+
+```bash
+git diff --check
+.venv/bin/python -m pytest -q
+```
+
+Result: no whitespace errors; 62 passed, 11 skipped.
 
 ---
 

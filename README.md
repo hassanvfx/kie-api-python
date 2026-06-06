@@ -50,6 +50,35 @@ Do not commit `.env`. The repository ignores `.env`, `.venv`, caches, outputs, l
 
 ## Token Safety
 
+### Where The Token Lives
+
+For an external cloner, the real KIE token should live in their own local `.env` file or their own private MCP client config. It should never live in committed example JSON.
+
+| File or Location | Should contain a real token? | Committed? | Purpose |
+|---|---:|---:|---|
+| `.env.example` | No | Yes | Shows required variable names with placeholders. |
+| `.env` | Yes, locally | No | Local CLI/MCP development secrets. |
+| `examples/mcp/*.json` | No | Yes | Safe example configs with placeholders only. |
+| User's private MCP client config | Optional | No | Can pass `KIE_API_KEY` to `kie-mcp` through an `env` block. |
+
+External setup:
+
+```bash
+git clone git@github.com:hassanvfx/kie-api-python.git
+cd kie-api-python
+python3 -m venv .venv
+.venv/bin/python -m pip install -e ".[dev,mcp]"
+cp .env.example .env
+```
+
+Then edit `.env`:
+
+```env
+KIE_API_KEY=their_own_kie_api_key
+KIE_BASE_URL=https://api.kie.ai
+KIE_UPLOAD_BASE_URL=https://kieai.redpandaai.co
+```
+
 Use one of these patterns:
 
 - Local CLI development: put `KIE_API_KEY` in `.env`.
@@ -503,6 +532,8 @@ Minimal MCP client config:
   }
 }
 ```
+
+The committed files in `examples/mcp/` intentionally use placeholders. A real user should either let `kie-mcp` load their local `.env`, or put their real key only in a private MCP client config outside Git.
 
 MCP safety:
 
