@@ -20,6 +20,68 @@
 | Task 15 | 2026-06-06 | Complete | Added an agent-ready MCP server, package-local MCP resources, open-source docs, tests, and rollback-friendly commits. |
 | Task 16 | 2026-06-06 | Complete | Installed and validated the real MCP server over stdio, including dry-run tool calls and live KIE smoke testing when credentials permit. |
 | Task 17 | 2026-06-06 | Complete | Ran live image generation and Suno music generation through the MCP server, then polled both jobs to success. |
+| Task 18 | 2026-06-06 | In Progress | Expand README and MCP documentation with exhaustive CLI/MCP parameters, usage cases, and token safety guidance. |
+
+---
+
+## Task 18: Exhaustive README and MCP Documentation
+
+### Request
+
+Update the public docs so the README exhaustively covers CLI commands and parameterization, then make the MCP guide comprehensive enough for agents and users to configure, test, and use the server safely.
+
+### Planned Scope
+
+- Replace the concise README with a full public reference.
+- Document every current CLI command and flag from `src/kie_cli/cli.py`.
+- Document async job records and model-routing caveats.
+- Expand `docs/mcp.md` with:
+  - setup cases for Codex, Claude Desktop, Cursor, and generic MCP clients
+  - token safety patterns
+  - every MCP tool and parameter from `src/kie_cli/mcp_server.py`
+  - MCP resources and prompts
+  - live-call checklist and troubleshooting
+- Keep examples token-safe with placeholders only.
+
+### Status
+
+Complete.
+
+### Implementation Summary
+
+- Replaced `README.md` with a complete public reference covering:
+  - install paths for CLI-only and CLI+MCP
+  - environment variables
+  - token safety
+  - every CLI command and flag
+  - model routing behavior
+  - async job records
+  - MCP overview
+  - testing, project layout, contribution, and security notes
+- Replaced `docs/mcp.md` with a comprehensive MCP guide covering:
+  - MCP purpose and tested flow
+  - token safety for local, client, CI, and production contexts
+  - Codex, Claude Desktop, Cursor, and generic client setup
+  - recommended agent workflow
+  - every MCP tool and parameter
+  - MCP resources and prompts
+  - protocol/live test history
+  - live-call checklist and troubleshooting
+- Kept all examples token-safe with placeholders only.
+
+### Verification
+
+```bash
+git diff --check
+.venv/bin/python -m pytest -q
+rg --pcre2 -n 'tempfile\.aiquickdraw|musicfile\.kie\.ai|KIE_API_KEY=(?!your_|replace_)|sk-[A-Za-z0-9]{20,}|BEGIN (RSA|OPENSSH|PRIVATE) KEY' README.md docs/mcp.md docs/journals/kie-cli-prototype.md
+```
+
+Results:
+
+- No whitespace errors.
+- Test suite: 62 passed, 11 skipped.
+- No generated media URLs or real-looking secrets found in the updated docs.
 
 ---
 
