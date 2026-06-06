@@ -26,6 +26,18 @@ Visual system for all images:
 - byline on every slide: `by Hassan Uriostegui`
 - no fake UI text beyond the slide title, brand lockup, and byline; no extra logos or clutter
 
+
+Video system for all slide-to-video prompts:
+
+- use the specific finished deck slide image as the primary visual reference
+- use the full slide set as secondary style references for continuity
+- preserve the exact title, brand lockup, and byline from the reference slide
+- do not add new readable text, captions, subtitles, watermarks, or logos
+- keep the 16:9 technical deck-slide composition recognizable throughout
+- use subtle premium motion: parallax, light sweeps, glow pulses, icon movement, line tracing, and gentle camera drift
+- avoid morphing typography, changing the layout, or turning the slide into a cinematic scene
+- target a 6-8 second seamless LinkedIn-ready clip
+
 Suggested posting schedule:
 
 | Week | Day | Post | Topic |
@@ -84,6 +96,12 @@ Image prompt:
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Agents, meet KIE". Create a launch slide with a central glowing MCP hub connecting to five clean icon tiles: image, video, music, chat, and upload. Add a small repository cube in one corner. The slide should feel like a polished open-source launch keynote cover.
 ```
 
+Video prompt:
+
+```text
+Use the provided Post 1 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 LinkedIn-ready motion version of the slide. Preserve the exact slide title, brand lockup, byline, layout, colors, and typography. Do not add any new readable text, logos, subtitles, or watermarks. Animate the central MCP hub with a slow cyan/emerald pulse while the five icon tiles gently connect through glowing lines. Add subtle depth parallax between the hub, icon tiles, and background grid. End on the original slide composition, crisp and readable.
+```
+
 ### Tuesday (Week 1) - Post 2: The Convenience Pitch
 
 LinkedIn copy:
@@ -116,6 +134,12 @@ Image prompt:
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Stop rebuilding API glue". Create a before/after slide: left side shows tangled abstract integration nodes, right side shows one clean pipeline into KIE workflows. Use visual icons for upload, payloads, polling, callbacks, token safety, and outputs; no labels except the title.
 ```
 
+Video prompt:
+
+```text
+Use the provided Post 2 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 technical carousel video. Keep all text and branding exactly unchanged and readable. Animate the tangled left-side integration nodes with a brief restless shimmer, then trace a clean glowing path into the simplified right-side KIE workflow. Use subtle line drawing, glass-panel highlights, and depth parallax. Do not introduce extra labels, UI text, logos, subtitles, or scene changes.
+```
+
 ### Wednesday (Week 1) - Post 3: CLI + MCP
 
 LinkedIn copy:
@@ -145,6 +169,12 @@ Image prompt:
 
 ```text
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "CLI for humans. MCP for agents.". Create a split architecture slide: left panel is a terminal-shaped block, right panel is an agent-tool graph, both converging into a shared KIE API core. Make it clean, symmetrical, and executive-demo ready.
+```
+
+Video prompt:
+
+```text
+Use the provided Post 3 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 slide-to-video clip. Preserve the title, brand lockup, byline, split layout, and typography exactly. Animate the terminal-side panel with a soft cursor-like glow without adding text, animate the agent-tool graph with small node pulses, and show both sides converging into the shared KIE API core through clean moving connector lines. Keep motion restrained, premium, and diagrammatic.
 ```
 
 ### Thursday (Week 1) - Post 4: Dry Run First
@@ -179,6 +209,12 @@ Image prompt:
 
 ```text
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Dry-run before spend". Create a safety-checkpoint slide showing an agent workflow paused at a glowing shield/check node before entering live API execution. Include small abstract credit meter, payload card, and polling loop icons.
+```
+
+Video prompt:
+
+```text
+Use the provided Post 4 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 motion slide. Keep all existing text, footer branding, and layout fixed and readable. Animate the workflow approaching the shield/check node, pause with a subtle protective glow, then softly illuminate the path after approval. Add a tiny abstract credit-meter pulse and a gentle polling-loop rotation. No new text, no extra logos, no cinematic background replacement.
 ```
 
 
@@ -222,6 +258,12 @@ Image prompt:
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Image jobs through MCP". Create a process slide with six numbered-looking visual stages but no readable numbers: dry-run, inspect payload, submit, job ID, wait, generated image. End with a polished image frame tile. Keep it clean and diagrammatic.
 ```
 
+Video prompt:
+
+```text
+Use the provided Post 5 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 video that keeps the slide composition recognizable. Preserve all visible text and branding exactly. Animate the six visual stages in sequence with soft connector highlights: dry-run, payload inspection, submit, job ID, wait, generated image. The final image frame tile should glow slightly as the sequence resolves. Use subtle parallax and glass reflections only; do not add labels or change the title.
+```
+
 ### Tuesday (Week 2) - Post 6: Song Generation Example
 
 LinkedIn copy:
@@ -253,6 +295,12 @@ Image prompt:
 
 ```text
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Music jobs need orchestration". Create a music workflow slide with a prompt card flowing through callback, provider model, saved job, polling, and MP3 output icons. Use waveform geometry and album-art tiles in the same deck style.
+```
+
+Video prompt:
+
+```text
+Use the provided Post 6 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 motion version. Preserve the exact slide text, brand lockup, byline, and layout. Animate waveform geometry with a soft traveling pulse, move the prompt card through callback, provider, saved job, polling, and MP3 output icons using elegant connector highlights. Let album-art tiles breathe with tiny depth parallax. No added readable text, subtitles, extra logos, or typography changes.
 ```
 
 ### Wednesday (Week 2) - Post 7: Async Polling
@@ -287,6 +335,12 @@ Image prompt:
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Async is the real work". Create a technical slide centered on a luminous polling loop around a job token. Multiple endpoint paths converge into normalized output cards. Make it feel like an elegant systems diagram.
 ```
 
+Video prompt:
+
+```text
+Use the provided Post 7 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 systems-diagram motion clip. Keep the title, lockup, byline, and all layout elements exactly preserved. Animate the polling loop around the job token with a smooth continuous rotation and light pulse. Let endpoint paths converge into normalized output cards through clean traced lines. Keep it calm, precise, and engineering-focused with no new text or extra interface details.
+```
+
 ### Thursday (Week 2) - Post 8: Upload-First Media
 
 LinkedIn copy:
@@ -317,6 +371,12 @@ Image prompt:
 
 ```text
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Local files become agent-ready URLs". Create a slide showing a local file tile transforming into a secure URL node, then branching into image-to-image, image-to-video, and multimodal chat icons. Keep the transformation visually obvious.
+```
+
+Video prompt:
+
+```text
+Use the provided Post 8 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 motion slide. Preserve all typography, brand footer, and composition exactly. Animate the local file tile transforming into a secure URL node with a clean glow transition, then branch gently toward image-to-image, image-to-video, and multimodal chat icons. Use restrained parallax, connector motion, and glass highlights. Do not add labels, captions, logos, or change the reference slide design.
 ```
 
 
@@ -361,6 +421,12 @@ Image prompt:
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Tools are not enough". Create a slide showing an MCP server exposing both tool cards and resource cards. Package-local resources should appear as cards inside a Python package cube, connected to an agent node.
 ```
 
+Video prompt:
+
+```text
+Use the provided Post 9 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 LinkedIn-ready technical video. Keep all existing text and branding locked and readable. Animate tool cards and resource cards with subtle hover depth, then show the Python package cube emitting clean connector lines to the agent node. Use soft cyan/emerald light sweeps and a slight camera drift. No new readable text, no extra logos, no cinematic scene conversion.
+```
+
 ### Tuesday (Week 3) - Post 10: Token Safety
 
 LinkedIn copy:
@@ -391,6 +457,12 @@ Image prompt:
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Powerful agents need boring security". Create a security slide with a private .env vault icon, placeholder config cards, ignored outputs, and an agent using tools without seeing the key. Strong shield motif, clean and serious, still visually cool.
 ```
 
+Video prompt:
+
+```text
+Use the provided Post 10 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 security-focused motion slide. Preserve the exact title, KIE.AI lockup, byline, and layout. Animate the private .env vault with a secure glow, let placeholder config cards remain abstract and unreadable, and show the agent using tools while the key stays hidden. Use a clean shield pulse and subtle background grid movement. No new text, subtitles, logos, or token-like strings.
+```
+
 ### Wednesday (Week 3) - Post 11: Contributor Angle
 
 LinkedIn copy:
@@ -419,6 +491,12 @@ Image prompt:
 
 ```text
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Add endpoints. Keep the contract.". Create a contributor workflow slide with modular blocks for docs, payload builder, routing, status normalization, CLI, MCP, tests, and resources snapping into a shared framework.
+```
+
+Video prompt:
+
+```text
+Use the provided Post 11 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 contributor workflow video. Keep typography, footer branding, and visual layout exactly unchanged. Animate modular blocks snapping gently into the shared framework in order: docs, payload builder, routing, status normalization, CLI, MCP, tests, resources. Use connector highlights, soft glass reflections, and precise engineering rhythm. No extra readable text, labels, logos, or scene replacement.
 ```
 
 ### Thursday (Week 3) - Post 12: Real MCP Test
@@ -455,6 +533,12 @@ Image prompt:
 
 ```text
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Tested end to end". Create an end-to-end validation slide: MCP client to kie-mcp to KIE API to async polling to generated media outputs. Use check icons and clean pipeline arrows, no extra text.
+```
+
+Video prompt:
+
+```text
+Use the provided Post 12 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 end-to-end validation motion clip. Preserve the exact slide title, brand lockup, byline, and layout. Animate the pipeline from MCP client to kie-mcp to KIE API to async polling to generated outputs with sequential glowing arrows and check-icon pulses. Keep everything diagrammatic, crisp, and readable. Do not add extra words, captions, logos, or change the deck style.
 ```
 
 
@@ -502,6 +586,12 @@ Image prompt:
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Build a product-render agent". Create a product-render agent slide showing a premium perfume bottle render tile generated from a brief card and reference image card. Show downstream branches to video, soundtrack, and launch copy icons.
 ```
 
+Video prompt:
+
+```text
+Use the provided Post 13 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 product-render agent video. Preserve all visible slide text, branding, byline, composition, and premium deck styling. Animate the brief card and reference image card feeding into the perfume bottle render tile, then branch subtly to video, soundtrack, and launch copy icons. Use elegant parallax and light sweeps around the render tile. No new readable text, extra logos, or cinematic scene changes.
+```
+
 ### Tuesday (Week 4) - Post 14: Why Principal Engineers Should Care
 
 LinkedIn copy:
@@ -532,6 +622,12 @@ Image prompt:
 
 ```text
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Reduce repeated integration work". Create a principal-engineer architecture slide showing clean system blocks for CLI, MCP, payloads, routes, polling, docs, resources, and tests. Calm, authoritative, minimal, boardroom-ready.
+```
+
+Video prompt:
+
+```text
+Use the provided Post 14 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 principal-engineer architecture motion slide. Keep title, brand lockup, byline, and all layout elements fixed and readable. Animate the system blocks for CLI, MCP, payloads, routes, polling, docs, resources, and tests with subtle connector tracing and calm glow pulses. The result should feel boardroom-ready and authoritative. No added labels, captions, logos, or layout drift.
 ```
 
 ### Wednesday (Week 4) - Post 15: Contributor CTA
@@ -565,4 +661,10 @@ Image prompt:
 
 ```text
 Viral LinkedIn engineering deck-slide style, 16:9 widescreen. Matte graphite/near-black background, subtle grid, crisp glass panels, cyan and acid-emerald gradients, sharp Figma/Keynote-quality layout, high-end principal-engineer aesthetic. Use bold minimal typography with only the exact slide title requested plus a persistent brand lockup reading "KIE.AI all-in-one agent-first MCP/CLI" and a small byline reading "by Hassan Uriostegui". Put the brand lockup in the lower-left footer and the byline in the lower-right footer on every slide. No other readable words, no fake UI text, no extra logos. Use simple isometric/vector icons, clean margins, strong hierarchy, designed like slide 1 of a premium technical carousel, not a cinematic photo. Slide title text: "Open-source agent access for KIE". Create a final call-to-action slide with an open-source repository launchpad branching into image, video, music, chat, upload, and contributor nodes. Make it feel like the closing slide of a high-energy technical launch deck.
+```
+
+Video prompt:
+
+```text
+Use the provided Post 15 deck slide image as the primary reference frame, and use the complete deck image set as secondary style references. Create a 6-8 second 16:9 closing CTA motion slide. Preserve the exact slide title, KIE.AI lockup, byline, and deck composition. Animate the open-source repository launchpad with a clean upward glow, then branch to image, video, music, chat, upload, and contributor nodes using polished connector motion. End with the original slide held sharp and readable. No new text, watermarks, logos, or style changes.
 ```

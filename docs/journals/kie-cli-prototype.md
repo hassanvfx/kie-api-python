@@ -26,6 +26,49 @@
 | Task 21 | 2026-06-06 | Complete | Added weekday scheduling labels to each LinkedIn campaign post. |
 | Task 22 | 2026-06-06 | Complete | Make LinkedIn posts copy-ready with fenced blocks and replace image prompts with consistent deck-slide style prompts. |
 | Task 23 | 2026-06-06 | Complete | Added persistent KIE.AI brand lockup and author byline requirements to every campaign image prompt. |
+| Task 24 | 2026-06-06 | Complete | Added copy-ready slide-to-video prompts for every LinkedIn campaign image. |
+
+---
+
+## Task 24: Slide-to-Video LinkedIn Campaign Prompts
+
+### Request
+
+Add video prompts for every campaign image so the finished deck slides can be passed as references and each post can generate a matching motion clip.
+
+### Implementation Summary
+
+- Added a global video system that explains how to use each finished slide as the primary reference and the full deck image set as secondary style references.
+- Added one copy-ready fenced `Video prompt` block under each of the 15 image prompts.
+- Wrote each video prompt to preserve the slide title, brand lockup, byline, typography, and 16:9 deck composition.
+- Kept the motion direction restrained and deck-native: parallax, glow pulses, connector tracing, icon movement, and light sweeps instead of cinematic scene replacement.
+
+### Status
+
+Complete.
+
+### Verification
+
+Validated campaign structure:
+
+```text
+posts=15
+image_prompts=15
+video_prompts=15
+video_system=1
+primary_refs=15
+full_deck_refs=15
+linkedin_copy=15
+```
+
+Ran:
+
+```bash
+git diff --check
+.venv/bin/python -m pytest -q
+```
+
+Result: no whitespace errors; 62 passed, 11 skipped.
 
 ---
 
