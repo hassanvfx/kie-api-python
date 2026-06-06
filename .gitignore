@@ -1,0 +1,55 @@
+# Local secrets and environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+secrets.*
+
+# Per-developer assistant/tool config
+.clineflow.local
+.codex/
+.agents/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Virtual environments and local installs
+.venv/
+venv/
+env/
+ENV/
+pip-wheel-metadata/
+
+# Build and packaging artifacts
+dist/
+build/
+site/
+*.egg-info/
+*.whl
+
+# Runtime outputs and live test artifacts
+outputs/
+
+# Logs and editor/OS noise
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
