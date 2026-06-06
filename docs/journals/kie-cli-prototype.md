@@ -17,6 +17,33 @@
 | Task 12 | 2026-04-29 | Complete | Added a comprehensive production-facing KIE CLI documentation guide excluding Gemini, refreshed the README as a concise landing page, and documented async/job/Suno provider caveats for internal selling and engineering onboarding. |
 | Task 13 | 2026-06-06 | Complete | Prepared the repository for public release by hardening ignore rules, adding a safe environment template, refreshing the README, and scanning the publishable tree for obvious secret references. |
 | Task 14 | 2026-06-06 | Complete | Published the prepared repository to GitHub at `git@github.com:hassanvfx/kie-api-python.git`. |
+| Task 15 | 2026-06-06 | In Progress | Add an agent-ready MCP server, package-local MCP resources, open-source docs, tests, and rollback-friendly commits. |
+
+---
+
+## Task 15: Agent-Ready MCP Server
+
+### Request
+
+Add an MCP-style agent interface so Codex and other agents can use KIE workflows directly, with a commit structure that makes changes easy to analyze and roll back.
+
+### Planned Scope
+
+- Add open-source basics:
+  - `LICENSE`
+  - `CONTRIBUTING.md`
+  - `SECURITY.md`
+  - GitHub Actions unit-test workflow
+- Add package-local MCP resources for agent-readable docs, supported models, and tool contracts.
+- Add a `kie-mcp` entrypoint and MCP server module.
+- Expose safe, dry-run-first tools for upload, image, video, chat, Suno, status, and wait workflows.
+- Add MCP docs and example client configuration.
+- Add tests for MCP tool functions/resources without requiring live KIE calls.
+- Commit in small slices so each layer can be reviewed or reverted independently.
+
+### Status
+
+In progress.
 
 ---
 

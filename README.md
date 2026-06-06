@@ -162,6 +162,8 @@ Contributions are welcome, especially changes that expand or refresh coverage fr
 
 Please keep secrets out of commits. Use `.env.example` for documented variable names and `.env` for local values.
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contribution workflow.
+
 ## Security Notes
 
 - Never expose `KIE_API_KEY` in frontend code, screenshots, logs, commits, or issue reports.
@@ -171,4 +173,4 @@ Please keep secrets out of commits. Use `.env.example` for documented variable n
 
 ## License
 
-No open-source license is included yet. Add a `LICENSE` file before publishing if you want others to have explicit rights to use, modify, and redistribute the project.
+MIT. See [LICENSE](LICENSE).
