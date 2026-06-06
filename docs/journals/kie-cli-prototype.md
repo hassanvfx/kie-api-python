@@ -24,7 +24,52 @@
 | Task 19 | 2026-06-06 | Complete | Clarified where external cloners should put KIE tokens for CLI and MCP usage. |
 | Task 20 | 2026-06-06 | Complete | Drafted a four-week LinkedIn campaign with post text, GitHub CTA, and consistent image-generation prompts. |
 | Task 21 | 2026-06-06 | Complete | Added weekday scheduling labels to each LinkedIn campaign post. |
-| Task 22 | 2026-06-06 | In Progress | Make LinkedIn posts copy-ready with fenced blocks and replace image prompts with consistent deck-slide style prompts. |
+| Task 22 | 2026-06-06 | Complete | Make LinkedIn posts copy-ready with fenced blocks and replace image prompts with consistent deck-slide style prompts. |
+| Task 23 | 2026-06-06 | Complete | Added persistent KIE.AI brand lockup and author byline requirements to every campaign image prompt. |
+
+---
+
+## Task 23: Persistent LinkedIn Campaign Image Branding
+
+### Request
+
+Add persistent branding to the campaign image prompts:
+
+```text
+KIE.AI all-in-one agent-first MCP/CLI
+by Hassan Uriostegui
+```
+
+### Implementation Summary
+
+- Updated the global visual system in the LinkedIn campaign guide to require the KIE.AI lockup on every generated slide.
+- Added the author byline requirement to every generated slide.
+- Updated all 15 image prompts so the brand lockup sits in the lower-left footer and the byline sits in the lower-right footer.
+- Preserved the copy-ready fenced format and consistent deck-slide visual language from Task 22.
+
+### Status
+
+Complete.
+
+### Verification
+
+Validated campaign structure:
+
+```text
+brand_lockup=16
+byline=16
+slide_titles=15
+image_prompts=15
+```
+
+Ran:
+
+```bash
+git diff --check
+.venv/bin/python -m pytest -q
+```
+
+Result: no whitespace errors; 62 passed, 11 skipped.
 
 ---
 
