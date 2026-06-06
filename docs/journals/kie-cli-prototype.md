@@ -17,7 +17,7 @@
 | Task 12 | 2026-04-29 | Complete | Added a comprehensive production-facing KIE CLI documentation guide excluding Gemini, refreshed the README as a concise landing page, and documented async/job/Suno provider caveats for internal selling and engineering onboarding. |
 | Task 13 | 2026-06-06 | Complete | Prepared the repository for public release by hardening ignore rules, adding a safe environment template, refreshing the README, and scanning the publishable tree for obvious secret references. |
 | Task 14 | 2026-06-06 | Complete | Published the prepared repository to GitHub at `git@github.com:hassanvfx/kie-api-python.git`. |
-| Task 15 | 2026-06-06 | In Progress | Add an agent-ready MCP server, package-local MCP resources, open-source docs, tests, and rollback-friendly commits. |
+| Task 15 | 2026-06-06 | Complete | Added an agent-ready MCP server, package-local MCP resources, open-source docs, tests, and rollback-friendly commits. |
 
 ---
 
@@ -57,6 +57,24 @@ In progress.
 - Added `src/kie_cli/mcp_server.py` with import-lazy FastMCP registration, package-local resources, prompts, and dry-run-first KIE tools.
 - Added optional `mcp` extra and `kie-mcp` console entrypoint in `pyproject.toml`.
 - Added `docs/mcp.md` and example MCP client configs under `examples/mcp/`.
+- Added offline MCP tests in `tests/test_mcp_server.py` for resources, dry-run tool payloads, prompt builders, and optional dependency behavior.
+
+### Commit Structure
+
+- `22f3a45` - Add open source project basics
+- `71051aa` - Add package-local MCP resources
+- `275012b` - Add dry-run-first KIE MCP server
+- `0dadf5d` - Document MCP setup for agents
+
+### Verification
+
+Ran the full local test suite:
+
+```bash
+.venv/bin/python -m pytest -q
+```
+
+Result: 62 passed, 10 skipped.
 
 ---
 
