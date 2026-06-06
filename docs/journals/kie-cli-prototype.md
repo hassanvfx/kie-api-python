@@ -21,7 +21,56 @@
 | Task 16 | 2026-06-06 | Complete | Installed and validated the real MCP server over stdio, including dry-run tool calls and live KIE smoke testing when credentials permit. |
 | Task 17 | 2026-06-06 | Complete | Ran live image generation and Suno music generation through the MCP server, then polled both jobs to success. |
 | Task 18 | 2026-06-06 | Complete | Expanded README and MCP documentation with exhaustive CLI/MCP parameters, usage cases, and token safety guidance. |
-| Task 19 | 2026-06-06 | In Progress | Clarify where external cloners should put KIE tokens for CLI and MCP usage. |
+| Task 19 | 2026-06-06 | Complete | Clarified where external cloners should put KIE tokens for CLI and MCP usage. |
+| Task 20 | 2026-06-06 | In Progress | Draft a four-week LinkedIn campaign with post text, GitHub CTA, and consistent image-generation prompts. |
+
+---
+
+## Task 20: LinkedIn Campaign Draft
+
+### Request
+
+Create a four-week LinkedIn campaign to promote `kie-api-python` as a fast CLI and MCP solution for agent workflows, emphasizing convenience first, then specific examples and implementation ideas. Include post text, the GitHub link, and detailed image-generation prompts with a consistent campaign style.
+
+### Planned Scope
+
+- Create a reusable campaign document under `docs/marketing/`.
+- Include 15 LinkedIn posts across four weeks.
+- Keep the messaging focused on:
+  - convenience
+  - MCP agent-native access
+  - CLI option for humans/scripts
+  - dry-run safety
+  - async polling
+  - examples for image and Suno music generation
+  - a specific product-render agent implementation
+  - contributor invitation
+- Provide a consistent visual system and one detailed image prompt per post.
+
+### Status
+
+Complete.
+
+### Implementation Summary
+
+- Added `docs/marketing/README.md`.
+- Added `docs/marketing/linkedin-campaign.md` with:
+  - 15 LinkedIn posts across four weeks
+  - GitHub CTA in every post
+  - campaign positioning for a principal-engineer launch
+  - convenience-first messaging
+  - concrete examples for image generation, Suno music, async polling, upload-first media, and product-render agents
+  - detailed image-generation prompt per post
+  - one consistent visual system for the entire campaign
+
+### Verification
+
+```bash
+git diff --check
+rg -n 'KIE_API_KEY=|sk-[A-Za-z0-9]{20,}|BEGIN (RSA|OPENSSH|PRIVATE) KEY|tempfile\.aiquickdraw|musicfile\.kie\.ai' docs/marketing docs/journals/kie-cli-prototype.md
+```
+
+Result: no whitespace errors; no generated media URLs or secret-like content in the marketing docs.
 
 ---
 
