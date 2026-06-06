@@ -18,6 +18,88 @@
 | Task 13 | 2026-06-06 | Complete | Prepared the repository for public release by hardening ignore rules, adding a safe environment template, refreshing the README, and scanning the publishable tree for obvious secret references. |
 | Task 14 | 2026-06-06 | Complete | Published the prepared repository to GitHub at `git@github.com:hassanvfx/kie-api-python.git`. |
 | Task 15 | 2026-06-06 | Complete | Added an agent-ready MCP server, package-local MCP resources, open-source docs, tests, and rollback-friendly commits. |
+| Task 16 | 2026-06-06 | In Progress | Install and validate the real MCP server over stdio, including dry-run tool calls and live KIE smoke testing when credentials permit. |
+
+---
+
+## Task 16: Real MCP Server Validation
+
+### Request
+
+Install the optional MCP dependency and validate the actual `kie-mcp` server end to end without further user prompts.
+
+### Planned Scope
+
+- Install the package with `.[dev,mcp]`.
+- Start the real MCP server over stdio.
+- Verify MCP protocol operations:
+  - initialize
+  - tools/list
+  - resources/list
+  - prompts/list
+  - dry-run tools/call
+  - resources/read
+- Attempt one live KIE smoke test only if credentials are present and the dry-run path works.
+- Fix server/protocol issues if discovered.
+- Commit and push any required changes in a focused commit.
+
+### Status
+
+Complete.
+
+### Implementation Summary
+
+- Installed optional MCP support with:
+
+```bash
+.venv/bin/python -m pip install -e ".[dev,mcp]"
+```
+
+- Verified the real `kie-mcp` server over MCP stdio using the official MCP Python client:
+  - `initialize`
+  - `tools/list`
+  - `resources/list`
+  - `prompts/list`
+  - `resources/read` for `kie://models/supported`
+  - `tools/call` for `kie_generate_image` with `dry_run=true`
+- Verified the server exposes:
+  - 9 MCP tools
+  - 6 MCP resources
+  - 4 MCP prompts
+- Ran one live KIE API smoke test through MCP using `kie_chat_completion` with `dry_run=false`.
+
+### Live MCP Smoke Result
+
+The live call returned:
+
+```json
+{
+  "ok": true,
+  "model": "gpt-5.2",
+  "status": "succeeded",
+  "text": "KIE MCP OK",
+  "usage": {
+    "completion_tokens": 4,
+    "prompt_tokens": 90,
+    "total_tokens": 94
+  },
+  "credits_consumed": 0.01
+}
+```
+
+### Follow-Up Test Coverage
+
+Added `tests/test_mcp_protocol.py`, which runs a real stdio MCP protocol smoke test when the optional MCP SDK is installed and skips otherwise.
+
+### Verification
+
+Ran the full local test suite after installing MCP support:
+
+```bash
+.venv/bin/python -m pytest -q
+```
+
+Result: 62 passed, 11 skipped.
 
 ---
 
