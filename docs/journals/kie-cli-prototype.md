@@ -18,7 +18,78 @@
 | Task 13 | 2026-06-06 | Complete | Prepared the repository for public release by hardening ignore rules, adding a safe environment template, refreshing the README, and scanning the publishable tree for obvious secret references. |
 | Task 14 | 2026-06-06 | Complete | Published the prepared repository to GitHub at `git@github.com:hassanvfx/kie-api-python.git`. |
 | Task 15 | 2026-06-06 | Complete | Added an agent-ready MCP server, package-local MCP resources, open-source docs, tests, and rollback-friendly commits. |
-| Task 16 | 2026-06-06 | In Progress | Install and validate the real MCP server over stdio, including dry-run tool calls and live KIE smoke testing when credentials permit. |
+| Task 16 | 2026-06-06 | Complete | Installed and validated the real MCP server over stdio, including dry-run tool calls and live KIE smoke testing when credentials permit. |
+| Task 17 | 2026-06-06 | Complete | Ran live image generation and Suno music generation through the MCP server, then polled both jobs to success. |
+
+---
+
+## Task 17: Live MCP Image and Song Generation
+
+### Request
+
+Test real image generation and a song/music generation using the MCP server.
+
+### Planned Scope
+
+- Use the real `kie-mcp` stdio server through the MCP Python client.
+- Dry-run both tools first:
+  - `kie_generate_image`
+  - `kie_suno_music`
+- Submit both jobs live with `dry_run=false`.
+- Save job records under ignored `outputs/mcp_live/`.
+- Poll both jobs with `kie_wait_for_job`.
+- Record final status and output URL availability without committing generated outputs or secrets.
+
+### Runtime Inputs
+
+- Image model: `gpt-image-2`
+- Image prompt: `A cinematic product render of a transparent glass perfume bottle on black marble, rim-lit, ultra clean commercial photography`
+- Suno provider model: `V5_5`
+- Suno prompt: `A short uplifting synth-pop song about open-source agents discovering creative APIs, bright chorus, polished modern production`
+- `KIE_API_KEY`: present locally, not printed
+- `KIE_SUNO_CALLBACK_URL`: not present locally
+
+### Status
+
+Complete.
+
+### Implementation Summary
+
+- Ran both live workflows through the real `kie-mcp` stdio server using the MCP Python client.
+- Saved local, ignored run artifacts under `outputs/mcp_live/20260606T201538Z/`.
+- Dry-ran image generation and Suno music first.
+- Submitted live image generation:
+  - MCP tool: `kie_generate_image`
+  - model alias: `gpt-image-2`
+  - routed model: `gpt-image-2-text-to-image`
+  - job ID: `43c6fca890a0c09124ee99b457d9f68f`
+  - final status: `succeeded`
+  - output URL count: 1
+- Submitted live Suno music generation:
+  - MCP tool: `kie_suno_music`
+  - provider model: `V5_5`
+  - routed model: `suno-music`
+  - first submit without callback failed with provider validation: `Please enter callBackUrl.`
+  - retried with `https://example.com/kie-mcp-callback`
+  - job ID: `ab8e2a428049effbbdf00b4a6d840279`
+  - final status: `succeeded`
+  - output URL count: 6
+
+### Verification
+
+Both async jobs were submitted and polled through MCP using:
+
+- `tools/call` for `kie_generate_image`
+- `tools/call` for `kie_suno_music`
+- `tools/call` for `kie_wait_for_job`
+
+This validates the real path:
+
+```text
+MCP client -> kie-mcp -> kie_cli package -> KIE.AI API -> async status polling -> generated media URLs
+```
+
+Generated media URLs are stored only in ignored local output artifacts, not in the committed journal.
 
 ---
 
