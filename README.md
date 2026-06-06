@@ -14,6 +14,7 @@ It gives humans and agents a focused, tested interface for KIE upload, image, vi
 - Package-local MCP resources so agents can understand supported models without fetching GitHub Raw
 - Gated live tests for real KIE validation
 - `.env` and generated outputs ignored by default
+- Launch deck and campaign assets in [`docs/marketing`](docs/marketing/README.md)
 
 ## Install
 

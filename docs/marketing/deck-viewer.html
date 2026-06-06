@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KIE.AI Agent-First MCP/CLI Deck</title>
+    <meta
+      name="description"
+      content="Viewer for the KIE.AI all-in-one agent-first MCP/CLI launch deck by Hassan Uriostegui."
+    >
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #070b10;
+        --panel: rgba(16, 24, 34, 0.78);
+        --panel-border: rgba(118, 255, 214, 0.22);
+        --text: #edf7ff;
+        --muted: #9fb3c8;
+        --cyan: #21d4fd;
+        --green: #72ffb6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        min-height: 100%;
+        background:
+          radial-gradient(circle at 15% 10%, rgba(33, 212, 253, 0.18), transparent 28rem),
+          radial-gradient(circle at 85% 0%, rgba(114, 255, 182, 0.12), transparent 24rem),
+          linear-gradient(135deg, #070b10 0%, #0b1018 48%, #070b10 100%);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      .page {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        min-height: 100%;
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem clamp(1rem, 3vw, 2rem);
+        border-bottom: 1px solid var(--panel-border);
+        background: rgba(7, 11, 16, 0.72);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand {
+        display: grid;
+        gap: 0.2rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1rem, 2vw, 1.35rem);
+        font-weight: 760;
+        letter-spacing: 0;
+      }
+
+      .byline {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+      }
+
+      a {
+        color: var(--text);
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.35rem;
+        padding: 0.55rem 0.9rem;
+        border: 1px solid var(--panel-border);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--text);
+        font-size: 0.92rem;
+        font-weight: 650;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        border-color: rgba(33, 212, 253, 0.45);
+        background: linear-gradient(135deg, rgba(33, 212, 253, 0.22), rgba(114, 255, 182, 0.16));
+      }
+
+      main {
+        display: grid;
+        padding: clamp(0.75rem, 2vw, 1.25rem);
+      }
+
+      .viewer {
+        min-height: 72vh;
+        overflow: hidden;
+        border: 1px solid var(--panel-border);
+        border-radius: 8px;
+        background: rgba(3, 6, 10, 0.7);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+      }
+
+      iframe {
+        display: block;
+        width: 100%;
+        height: calc(100vh - 6.2rem);
+        min-height: 72vh;
+        border: 0;
+        background: #10131a;
+      }
+
+      .fallback {
+        display: grid;
+        place-items: center;
+        min-height: 72vh;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .fallback p {
+        max-width: 34rem;
+        margin: 0 0 1rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      @media (max-width: 760px) {
+        header {
+          align-items: stretch;
+        }
+
+        nav,
+        .button {
+          width: 100%;
+        }
+
+        iframe {
+          height: calc(100vh - 10rem);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div class="brand">
+          <h1>KIE.AI all-in-one agent-first MCP/CLI</h1>
+          <div class="byline">Launch deck by Hassan Uriostegui</div>
+        </div>
+        <nav aria-label="Deck actions">
+          <a class="button primary" href="./deck.pdf">Open PDF</a>
+          <a class="button" href="./deck.pdf" download>Download</a>
+          <a class="button" href="./linkedin-campaign.md">Campaign Notes</a>
+        </nav>
+      </header>
+      <main>
+        <section class="viewer" aria-label="Embedded PDF deck viewer">
+          <iframe title="KIE.AI launch deck PDF" src="./deck.pdf#view=FitH">
+            <div class="fallback">
+              <p>
+                Your browser could not embed the PDF viewer. Open the deck directly instead.
+              </p>
+              <a class="button primary" href="./deck.pdf">Open deck.pdf</a>
+            </div>
+          </iframe>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

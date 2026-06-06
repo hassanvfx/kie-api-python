@@ -27,6 +27,54 @@
 | Task 22 | 2026-06-06 | Complete | Make LinkedIn posts copy-ready with fenced blocks and replace image prompts with consistent deck-slide style prompts. |
 | Task 23 | 2026-06-06 | Complete | Added persistent KIE.AI brand lockup and author byline requirements to every campaign image prompt. |
 | Task 24 | 2026-06-06 | Complete | Added copy-ready slide-to-video prompts for every LinkedIn campaign image. |
+| Task 25 | 2026-06-06 | Complete | Added the rendered marketing deck PDF plus a lightweight browser viewer. |
+
+---
+
+## Task 25: Marketing Deck PDF Viewer
+
+### Request
+
+Add the rendered `docs/marketing/deck.pdf` into the repo with a browser-friendly viewer.
+
+### Implementation Summary
+
+- Added `docs/marketing/deck-viewer.html` as a self-contained HTML viewer that embeds `deck.pdf`.
+- Added Open PDF, Download, and Campaign Notes actions for local and GitHub Pages usage.
+- Updated `docs/marketing/README.md` to document the PDF, viewer, and local generated slide behavior.
+- Linked the marketing assets from the root README highlights for discoverability.
+- Added `docs/marketing/slides/` to `.gitignore` so generated PNG intermediates are not committed accidentally alongside the canonical PDF.
+
+### Status
+
+Complete.
+
+### Verification
+
+Validated viewer structure:
+
+```text
+viewer_exists=True
+pdf_exists=True
+pdf_size_mb=82.5
+iframe_pdf=True
+open_pdf=True
+campaign_notes=True
+marketing_readme_viewer=True
+root_readme_marketing=True
+```
+
+Ran:
+
+```bash
+git diff --check
+.venv/bin/python -m pytest -q
+git check-ignore -v docs/marketing/slides/<sample-slide>.png
+```
+
+Result: no whitespace errors; 62 passed, 11 skipped; generated slide PNGs are ignored.
+
+Note: attempted live browser verification through a temporary local docs server, but the environment rejected the local server approval. The viewer was verified structurally instead.
 
 ---
 
