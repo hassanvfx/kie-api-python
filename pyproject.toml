@@ -17,9 +17,13 @@ dependencies = [
 dev = [
   "pytest>=8.0.0"
 ]
+mcp = [
+  "mcp>=1.0.0"
+]
 
 [project.scripts]
 kie-cli = "kie_cli.cli:main"
+kie-mcp = "kie_cli.mcp_server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

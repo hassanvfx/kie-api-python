@@ -54,6 +54,8 @@ In progress.
   - GitHub Actions unit-test workflow
   - README license/contribution links
 - Added package-local MCP resources under `src/kie_cli/mcp_resources/` so installed agents can read compact KIE context without GitHub Raw or network access.
+- Added `src/kie_cli/mcp_server.py` with import-lazy FastMCP registration, package-local resources, prompts, and dry-run-first KIE tools.
+- Added optional `mcp` extra and `kie-mcp` console entrypoint in `pyproject.toml`.
 
 ---
 
