@@ -29,6 +29,7 @@ from .payloads import (
     build_gpt_image_2_payload,
     build_grok_video_payload,
     build_nano_banana_pro_payload,
+    build_seedance_payload,
     build_suno_lyrics_payload,
     build_suno_music_payload,
     build_suno_sounds_payload,
@@ -66,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if getattr(args, "json", False):
         print_json(result)
-    else:
+    elif args.model == "veo3":
         print_human(result)
 
     return 0 if result.get("ok", True) else 1
@@ -100,21 +101,34 @@ def build_parser() -> argparse.ArgumentParser:
     image.add_argument("--json", action="store_true")
 
     video = subparsers.add_parser("video", help="Submit a video generation task.")
-    video.add_argument("model", choices=["grok", "veo3"], help="Focused video model alias.")
+    video.add_argument("model", choices=["grok", "veo3", "seedance"], help="Focused video model alias.")
     add_prompt_args(video)
     add_image_args(video)
     video.add_argument("--aspect-ratio", default=None)
     video.add_argument("--mode", default="normal", choices=["fun", "normal", "spicy"])
-    video.add_argument("--duration", default=6, type=int)
+    video.add_argument("--duration", type=int)
     video.add_argument("--resolution", default=None)
     video.add_argument("--nsfw-checker", action="store_true")
     video.add_argument("--veo-model", default="veo3_fast", choices=["veo3", "veo3_fast", "veo3_lite"])
+    video.add_argument(
+        "--seedance-model",
+        default="seedance-2-fast",
+        choices=["seedance-2-fast", "seedance-2", "seedance-1.5-pro"],
+    )
     video.add_argument(
         "--generation-type",
         choices=["TEXT_2_VIDEO", "FIRST_AND_LAST_FRAMES_2_VIDEO", "REFERENCE_2_VIDEO"],
     )
     video.add_argument("--disable-translation", action="store_true")
     video.add_argument("--watermark")
+    video.add_argument("--first-frame")
+    video.add_argument("--last-frame")
+    video.add_argument("--reference-image", action="append", default=[])
+    video.add_argument("--reference-video", action="append", default=[])
+    video.add_argument("--reference-audio", action="append", default=[])
+    video.add_argument("--generate-audio", action="store_true")
+    video.add_argument("--web-search", action="store_true")
+    video.add_argument("--fixed-lens", action="store_true")
     video.add_argument("--callback-url")
     video.add_argument("--upload-path", default="kie-cli/videos")
     video.add_argument("--save-job")
@@ -308,6 +322,7 @@ def command_video(args: argparse.Namespace) -> dict[str, Any]:
         dry_run=args.dry_run,
     )
     image_urls = [item.resolved_url for item in resolved]
+    resolved_media = resolved
 
     if args.model == "grok":
         payload = build_grok_video_payload(
@@ -315,14 +330,14 @@ def command_video(args: argparse.Namespace) -> dict[str, Any]:
             image_urls=image_urls,
             aspect_ratio=args.aspect_ratio or ("16:9" if image_urls else "2:3"),
             mode=args.mode,
-            duration=args.duration,
+            duration=args.duration or 6,
             resolution=args.resolution or "480p",
             nsfw_checker=args.nsfw_checker,
             callback_url=args.callback_url,
         )
         kind = "market"
         model = payload["model"]
-    else:
+    elif args.model == "veo3":
         payload = build_veo_payload(
             prompt=prompt,
             image_urls=image_urls,
@@ -336,14 +351,78 @@ def command_video(args: argparse.Namespace) -> dict[str, Any]:
         )
         kind = "veo"
         model = args.veo_model
+    else:
+        first_frame = resolve_media_inputs(
+            [args.first_frame] if args.first_frame else [],
+            kind="image",
+            uploader=uploader,
+            upload_path=args.upload_path,
+            dry_run=args.dry_run,
+        )
+        last_frame = resolve_media_inputs(
+            [args.last_frame] if args.last_frame else [],
+            kind="image",
+            uploader=uploader,
+            upload_path=args.upload_path,
+            dry_run=args.dry_run,
+        )
+        reference_images = resolve_media_inputs(
+            args.reference_image,
+            kind="image",
+            uploader=uploader,
+            upload_path=args.upload_path,
+            dry_run=args.dry_run,
+        )
+        reference_videos = resolve_media_inputs(
+            args.reference_video,
+            kind="video",
+            uploader=uploader,
+            upload_path=args.upload_path,
+            dry_run=args.dry_run,
+        )
+        reference_audios = resolve_media_inputs(
+            args.reference_audio,
+            kind="audio",
+            uploader=uploader,
+            upload_path=args.upload_path,
+            dry_run=args.dry_run,
+        )
+        resolved_media = [
+            *resolved,
+            *first_frame,
+            *last_frame,
+            *reference_images,
+            *reference_videos,
+            *reference_audios,
+        ]
+        payload = build_seedance_payload(
+            prompt=prompt,
+            model=args.seedance_model,
+            input_urls=image_urls,
+            first_frame_url=first_frame[0].resolved_url if first_frame else None,
+            last_frame_url=last_frame[0].resolved_url if last_frame else None,
+            reference_image_urls=[item.resolved_url for item in reference_images],
+            reference_video_urls=[item.resolved_url for item in reference_videos],
+            reference_audio_urls=[item.resolved_url for item in reference_audios],
+            aspect_ratio=args.aspect_ratio or "16:9",
+            resolution=args.resolution or "720p",
+            duration=args.duration or 5,
+            fixed_lens=args.fixed_lens,
+            generate_audio=args.generate_audio,
+            web_search=args.web_search,
+            nsfw_checker=args.nsfw_checker,
+            callback_url=args.callback_url,
+        )
+        kind = "market"
+        model = payload["model"]
 
     if args.dry_run:
-        return dry_run_result(model=model, payload=payload, resolved_media=resolved, kind=kind)
+        return dry_run_result(model=model, payload=payload, resolved_media=resolved_media, kind=kind)
 
     client = KieClient(config)
     response = client.create_veo_task(payload) if kind == "veo" else client.create_market_task(payload)
     result = normalize_submit(response, model=model)
-    result["resolvedMedia"] = [asdict(item) for item in resolved]
+    result["resolvedMedia"] = [asdict(item) for item in resolved_media]
     maybe_save_job(args, result=result, payload=payload, resolved_media=result["resolvedMedia"], raw=response)
     return result
 

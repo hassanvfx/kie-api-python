@@ -25,6 +25,7 @@ from .payloads import (
     build_gpt_image_2_payload,
     build_grok_video_payload,
     build_nano_banana_pro_payload,
+    build_seedance_payload,
     build_suno_lyrics_payload,
     build_suno_music_payload,
     build_suno_sounds_payload,
@@ -197,13 +198,22 @@ def kie_generate_video(
     image: list[str] | None = None,
     aspect_ratio: str | None = None,
     mode: str = "normal",
-    duration: int = 6,
+    duration: int | None = None,
     resolution: str | None = None,
     nsfw_checker: bool = False,
     veo_model: str = "veo3_fast",
+    seedance_model: str = "seedance-2-fast",
     generation_type: str | None = None,
     disable_translation: bool = False,
     watermark: str | None = None,
+    first_frame: str | None = None,
+    last_frame: str | None = None,
+    reference_image: list[str] | None = None,
+    reference_video: list[str] | None = None,
+    reference_audio: list[str] | None = None,
+    generate_audio: bool = False,
+    web_search: bool = False,
+    fixed_lens: bool = False,
     callback_url: str | None = None,
     upload_path: str = "kie-mcp/videos",
     save_job: str | None = None,
@@ -221,6 +231,7 @@ def kie_generate_video(
         dry_run=dry_run,
     )
     image_urls = [item.resolved_url for item in resolved]
+    resolved_media = resolved
 
     if model == "grok":
         payload = build_grok_video_payload(
@@ -228,7 +239,7 @@ def kie_generate_video(
             image_urls=image_urls,
             aspect_ratio=aspect_ratio or ("16:9" if image_urls else "2:3"),
             mode=mode,
-            duration=duration,
+            duration=duration or 6,
             resolution=resolution or "480p",
             nsfw_checker=nsfw_checker,
             callback_url=callback_url,
@@ -249,11 +260,75 @@ def kie_generate_video(
         )
         route = "veo"
         resolved_model = veo_model
+    elif model == "seedance":
+        first_frame_resolved = resolve_media_inputs(
+            [first_frame] if first_frame else [],
+            kind="image",
+            uploader=uploader,
+            upload_path=upload_path,
+            dry_run=dry_run,
+        )
+        last_frame_resolved = resolve_media_inputs(
+            [last_frame] if last_frame else [],
+            kind="image",
+            uploader=uploader,
+            upload_path=upload_path,
+            dry_run=dry_run,
+        )
+        reference_images = resolve_media_inputs(
+            reference_image or [],
+            kind="image",
+            uploader=uploader,
+            upload_path=upload_path,
+            dry_run=dry_run,
+        )
+        reference_videos = resolve_media_inputs(
+            reference_video or [],
+            kind="video",
+            uploader=uploader,
+            upload_path=upload_path,
+            dry_run=dry_run,
+        )
+        reference_audios = resolve_media_inputs(
+            reference_audio or [],
+            kind="audio",
+            uploader=uploader,
+            upload_path=upload_path,
+            dry_run=dry_run,
+        )
+        resolved_media = [
+            *resolved,
+            *first_frame_resolved,
+            *last_frame_resolved,
+            *reference_images,
+            *reference_videos,
+            *reference_audios,
+        ]
+        payload = build_seedance_payload(
+            prompt=prompt,
+            model=seedance_model,
+            input_urls=image_urls,
+            first_frame_url=first_frame_resolved[0].resolved_url if first_frame_resolved else None,
+            last_frame_url=last_frame_resolved[0].resolved_url if last_frame_resolved else None,
+            reference_image_urls=[item.resolved_url for item in reference_images],
+            reference_video_urls=[item.resolved_url for item in reference_videos],
+            reference_audio_urls=[item.resolved_url for item in reference_audios],
+            aspect_ratio=aspect_ratio or "16:9",
+            resolution=resolution or "720p",
+            duration=duration or 5,
+            fixed_lens=fixed_lens,
+            generate_audio=generate_audio,
+            web_search=web_search,
+            nsfw_checker=nsfw_checker,
+            callback_url=callback_url,
+        )
+        route = "market"
+        resolved_model = payload["model"]
     else:
-        raise ValueError("Unsupported video model. Use 'grok' or 'veo3'.")
+        raise ValueError("Unsupported video model. Use 'grok', 'veo3', or 'seedance'.")
 
     if dry_run:
-        return _dry_run_result(route, resolved_model, payload, resolved)
+        return _dry_run_result(route, resolved_model, payload, resolved_media)
 
     client = KieClient(config)
     response = client.create_veo_task(payload) if route == "veo" else client.create_market_task(payload)
@@ -262,7 +337,7 @@ def kie_generate_video(
         result,
         save_job=save_job,
         payload=payload,
-        resolved_media=[asdict(item) for item in resolved],
+        resolved_media=[asdict(item) for item in resolved_media],
         raw=response,
     )
 

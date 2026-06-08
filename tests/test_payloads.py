@@ -2,6 +2,7 @@ from kie_cli.payloads import (
     build_gpt_image_2_payload,
     build_grok_video_payload,
     build_nano_banana_pro_payload,
+    build_seedance_payload,
     build_suno_lyrics_payload,
     build_suno_music_payload,
     build_suno_sounds_payload,
@@ -83,6 +84,69 @@ def test_veo_payload_text_to_video_without_images():
     assert payload["model"] == "veo3"
     assert payload["generationType"] == "TEXT_2_VIDEO"
     assert "imageUrls" not in payload
+
+
+def test_seedance_2_fast_text_payload_defaults():
+    payload = build_seedance_payload(prompt="a cinematic city flythrough")
+
+    assert payload["model"] == "bytedance/seedance-2-fast"
+    assert payload["input"]["prompt"] == "a cinematic city flythrough"
+    assert payload["input"]["aspect_ratio"] == "16:9"
+    assert payload["input"]["resolution"] == "720p"
+    assert payload["input"]["duration"] == 5
+    assert payload["input"]["generate_audio"] is False
+    assert payload["input"]["web_search"] is False
+
+
+def test_seedance_2_payload_with_multimodal_references():
+    payload = build_seedance_payload(
+        prompt="match the references and create a dramatic reveal",
+        model="seedance-2",
+        reference_image_urls=["https://example.com/ref.png"],
+        reference_video_urls=["https://example.com/ref.mp4"],
+        reference_audio_urls=["https://example.com/ref.mp3"],
+        duration=12,
+        generate_audio=True,
+        web_search=True,
+        callback_url="https://example.com/callback",
+    )
+
+    assert payload["model"] == "bytedance/seedance-2"
+    assert payload["callBackUrl"] == "https://example.com/callback"
+    assert payload["input"]["reference_image_urls"] == ["https://example.com/ref.png"]
+    assert payload["input"]["reference_video_urls"] == ["https://example.com/ref.mp4"]
+    assert payload["input"]["reference_audio_urls"] == ["https://example.com/ref.mp3"]
+    assert payload["input"]["duration"] == 12
+    assert payload["input"]["generate_audio"] is True
+
+
+def test_seedance_1_5_payload_uses_input_urls_and_string_duration():
+    payload = build_seedance_payload(
+        prompt="animate these frames",
+        model="seedance-1.5-pro",
+        input_urls=["https://example.com/a.png", "https://example.com/b.png"],
+        duration=8,
+        fixed_lens=True,
+    )
+
+    assert payload["model"] == "bytedance/seedance-1.5-pro"
+    assert payload["input"]["input_urls"] == ["https://example.com/a.png", "https://example.com/b.png"]
+    assert payload["input"]["duration"] == "8"
+    assert payload["input"]["fixed_lens"] is True
+
+
+def test_seedance_2_rejects_mixed_frame_and_reference_inputs():
+    try:
+        build_seedance_payload(
+            prompt="animate this",
+            model="seedance-2-fast",
+            first_frame_url="https://example.com/start.png",
+            reference_image_urls=["https://example.com/ref.png"],
+        )
+    except ValueError as exc:
+        assert "mutually exclusive" in str(exc)
+    else:
+        raise AssertionError("Expected mixed Seedance inputs to fail")
 
 
 def test_suno_music_payload_includes_optional_fields():

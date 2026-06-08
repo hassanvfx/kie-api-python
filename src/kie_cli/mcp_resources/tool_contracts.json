@@ -21,8 +21,8 @@
       "liveCall": true,
       "supportsDryRun": true,
       "required": ["model", "prompt"],
-      "models": ["grok", "veo3"],
-      "notes": "Submits an async video job."
+      "models": ["grok", "veo3", "seedance"],
+      "notes": "Submits an async video job. Seedance supports seedance-2-fast, seedance-2, and seedance-1.5-pro variants."
     },
     {
       "name": "kie_chat_completion",

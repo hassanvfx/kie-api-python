@@ -11,6 +11,7 @@ Optional filtering:
     KIE_LIVE_SCOPE=gemini
     KIE_LIVE_SCOPE=image
     KIE_LIVE_SCOPE=video
+    KIE_LIVE_SCOPE=seedance
     KIE_LIVE_SCOPE=suno
     KIE_LIVE_SCOPE=generation
     KIE_LIVE_SCOPE=all
@@ -364,8 +365,9 @@ def run_generation_case(
     expected_model: str,
     prompt_file: Path,
     input_images: list[Path] | None = None,
+    extra_scopes: tuple[str, ...] = (),
 ) -> dict[str, Any]:
-    require_scope(kind, "generation")
+    require_scope(kind, "generation", *extra_scopes)
     case_dir = run_root / case_name
     job_file = case_dir / "job.json"
 
@@ -634,6 +636,18 @@ def test_live_video_with_prompt(run_root):
         expected_model="grok-imagine/image-to-video",
         prompt_file=PROMPTS / "video_reference_prompt.txt",
         input_images=[IMAGES / "synthetic_reference_a.png"],
+    )
+
+
+def test_live_seedance_prompt_only(run_root):
+    run_generation_case(
+        run_root,
+        case_name="seedance-prompt-only",
+        kind="video",
+        model_alias="seedance",
+        expected_model="bytedance/seedance-2-fast",
+        prompt_file=PROMPTS / "video_text_prompt.txt",
+        extra_scopes=("seedance",),
     )
 
 

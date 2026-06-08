@@ -43,6 +43,7 @@ This guide covers the currently strong and presentable command families:
 - `kie-cli image gpt-image-2`
 - `kie-cli video grok`
 - `kie-cli video veo3`
+- `kie-cli video seedance`
 - `kie-cli llm gpt-5-2`
 - `kie-cli suno music`
 - `kie-cli suno lyrics`
@@ -67,6 +68,7 @@ For positioning purposes, do not present the Gemini family as part of the suppor
 | Image | `kie-cli image gpt-image-2` | `gpt-image-2-text-to-image` or `gpt-image-2-image-to-image` | Yes | Optional | Async | Yes | Yes | Mode switches automatically based on presence of `--image` |
 | Video | `kie-cli video grok` | `grok-imagine/text-to-video` or `grok-imagine/image-to-video` | Yes | Optional | Async | Yes | Yes | Duration type changes between text-only and image mode |
 | Video | `kie-cli video veo3` | `veo3`, `veo3_fast`, or `veo3_lite` | Yes | Optional | Async | Yes | Core async contract covered; route and payload logic implemented | Generation type must match workflow intent |
+| Video | `kie-cli video seedance` | `bytedance/seedance-2-fast`, `bytedance/seedance-2`, or `bytedance/seedance-1.5-pro` | Yes | Optional | Async | Yes | Unit-covered; gated live scope added | Seedance 2.x frame inputs and multimodal reference inputs are mutually exclusive |
 | LLM | `kie-cli llm gpt-5-2` | `/gpt-5-2/v1/chat/completions` | Yes | Optional, repeated | Sync | No | Yes, including multimodal live test | Uses OpenAI-compatible request/response shape |
 | Suno | `kie-cli suno music` | `/api/v1/generate` | Yes | No | Async | Yes | Yes | Live provider required explicit provider `--model` |
 | Suno | `kie-cli suno lyrics` | `/api/v1/lyrics` | Yes | No | Async | No | Yes | Live provider required `--callback-url` |
@@ -144,7 +146,7 @@ These are mainly relevant when validating the CLI against real services:
 
 - `RUN_KIE_LIVE_TESTS=1`
   - enables gated integration tests
-- `KIE_LIVE_SCOPE=llm|gemini|image|video|suno|generation|all`
+- `KIE_LIVE_SCOPE=llm|gemini|image|video|seedance|suno|generation|all`
   - scopes live test execution
 - `KIE_LIVE_POLL_INTERVAL`
   - polling interval used by integration tests
@@ -248,6 +250,8 @@ Examples:
     - `grok-imagine/image-to-video`
 - `kie-cli video veo3 --veo-model veo3_fast`
   - uses `veo3_fast` as the actual async model contract
+- `kie-cli video seedance --seedance-model seedance-2-fast`
+  - uses `bytedance/seedance-2-fast` as the actual Market async model contract
 - `kie-cli suno music`
   - persists as synthetic async routing model `suno-music`
 - `kie-cli suno sounds`
@@ -853,6 +857,123 @@ This means the CLI is optimized for the most common two modes:
 - frame-conditioned interpolation / transition generation
 
 If you need a different provider behavior, set `--generation-type` explicitly.
+
+---
+
+## `kie-cli video seedance`
+
+## Purpose
+
+Submits a Bytedance Seedance task through the unified KIE Market route.
+
+The user-facing command is `video seedance`; the concrete provider model is chosen with `--seedance-model`.
+
+## Seedance-specific options
+
+- `--seedance-model seedance-2-fast|seedance-2|seedance-1.5-pro`
+  - default: `seedance-2-fast`
+- `--first-frame` / `--last-frame`
+  - Seedance 2.x first/last-frame image-to-video inputs
+- `--reference-image`, `--reference-video`, `--reference-audio`
+  - Seedance 2.x multimodal reference-to-video inputs
+- `--generate-audio`
+  - defaults off to avoid surprise provider cost
+- `--web-search`
+  - Seedance 2.x only
+- `--fixed-lens`
+- `--duration`
+  - default: `5`
+- `--resolution`
+  - default: `720p`
+- `--aspect-ratio`
+  - default: `16:9`
+
+## Example: prompt-only Seedance 2.0 Fast
+
+```bash
+.venv/bin/kie-cli video seedance \
+  --prompt "A sweeping cinematic reveal of a neon city at sunrise" \
+  --seedance-model seedance-2-fast \
+  --duration 5 \
+  --save-job outputs/jobs/seedance-video.json \
+  --json
+```
+
+## Example: first-and-last-frame workflow
+
+```bash
+.venv/bin/kie-cli video seedance \
+  --prompt "Create a smooth transition between these two supplied frames" \
+  --first-frame ./first.png \
+  --last-frame ./last.png \
+  --seedance-model seedance-2 \
+  --json
+```
+
+## Example: multimodal reference workflow
+
+```bash
+.venv/bin/kie-cli video seedance \
+  --prompt "Use the visual, motion, and audio references to create a polished product reveal" \
+  --reference-image ./style.png \
+  --reference-video ./motion.mp4 \
+  --reference-audio ./soundtrack.mp3 \
+  --generate-audio \
+  --json
+```
+
+## Request payload shape: Seedance 2.x prompt-only
+
+```json
+{
+  "model": "bytedance/seedance-2-fast",
+  "input": {
+    "prompt": "A sweeping cinematic reveal of a neon city at sunrise",
+    "generate_audio": false,
+    "resolution": "720p",
+    "aspect_ratio": "16:9",
+    "duration": 5,
+    "web_search": false,
+    "nsfw_checker": false
+  }
+}
+```
+
+## Request payload shape: Seedance 1.5 image-to-video
+
+```json
+{
+  "model": "bytedance/seedance-1.5-pro",
+  "input": {
+    "prompt": "Animate these supplied frames",
+    "aspect_ratio": "16:9",
+    "resolution": "720p",
+    "duration": "8",
+    "fixed_lens": false,
+    "generate_audio": false,
+    "nsfw_checker": false,
+    "input_urls": [
+      "https://example.com/temp/first.png",
+      "https://example.com/temp/last.png"
+    ]
+  }
+}
+```
+
+## Seedance deep dive: reference rules
+
+Seedance 2.x supports three mutually exclusive modes:
+
+- prompt-only text-to-video
+- first/last-frame image-to-video via `--image`, `--first-frame`, and `--last-frame`
+- multimodal reference-to-video via `--reference-image`, `--reference-video`, and `--reference-audio`
+
+Seedance 1.5 Pro has a different schema:
+
+- repeated `--image` values become `input_urls`
+- at most two images are accepted
+- duration is serialized as a string
+- Seedance 2.x reference video/audio and web-search options are rejected
 
 ---
 

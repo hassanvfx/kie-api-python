@@ -19,10 +19,10 @@
     },
     {
       "family": "video",
-      "models": ["grok", "veo3"],
+      "models": ["grok", "veo3", "seedance"],
       "sync": false,
       "tools": ["kie_generate_video"],
-      "notes": "grok maps to Market routes; veo3 supports veo3, veo3_fast, and veo3_lite variants."
+      "notes": "grok and seedance map to Market routes; veo3 supports veo3, veo3_fast, and veo3_lite variants."
     },
     {
       "family": "chat",
@@ -46,6 +46,9 @@
         "gpt-image-2-image-to-image",
         "grok-imagine/text-to-video",
         "grok-imagine/image-to-video",
+        "bytedance/seedance-2-fast",
+        "bytedance/seedance-2",
+        "bytedance/seedance-1.5-pro",
         "veo3",
         "veo3_fast",
         "veo3_lite",

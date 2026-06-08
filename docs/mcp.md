@@ -265,18 +265,27 @@ Parameters:
 
 | Parameter | Type | Required | Default | Notes |
 |---|---|---:|---|---|
-| `model` | string | Yes | None | `grok` or `veo3`. |
+| `model` | string | Yes | None | `grok`, `veo3`, or `seedance`. |
 | `prompt` | string | Yes | None | Video prompt. |
 | `image` | list[string]/null | No | null | Local paths or URLs. |
 | `aspect_ratio` | string/null | No | inferred | Grok text defaults `2:3`; image/Veo defaults `16:9`. |
 | `mode` | string | No | `normal` | Grok: `fun`, `normal`, or `spicy`. |
-| `duration` | integer | No | `6` | Grok duration. |
-| `resolution` | string/null | No | `480p` Grok, `720p` Veo | Provider-specific. |
-| `nsfw_checker` | boolean | No | false | Grok payload flag. |
+| `duration` | integer/null | No | null | Defaults to `6` for Grok, `5` for Seedance. |
+| `resolution` | string/null | No | `480p` Grok, `720p` Veo/Seedance | Provider-specific. |
+| `nsfw_checker` | boolean | No | false | Grok/Seedance payload flag. |
 | `veo_model` | string | No | `veo3_fast` | `veo3`, `veo3_fast`, or `veo3_lite`. |
+| `seedance_model` | string | No | `seedance-2-fast` | `seedance-2-fast`, `seedance-2`, or `seedance-1.5-pro`. |
 | `generation_type` | string/null | No | inferred | Veo: `TEXT_2_VIDEO`, `FIRST_AND_LAST_FRAMES_2_VIDEO`, `REFERENCE_2_VIDEO`. |
 | `disable_translation` | boolean | No | false | Veo translation toggle. |
 | `watermark` | string/null | No | null | Veo watermark. |
+| `first_frame` | string/null | No | null | Seedance 2.x first-frame image, local path or URL. |
+| `last_frame` | string/null | No | null | Seedance 2.x last-frame image, local path or URL. |
+| `reference_image` | list[string]/null | No | null | Seedance 2.x reference image inputs. |
+| `reference_video` | list[string]/null | No | null | Seedance 2.x reference video inputs. |
+| `reference_audio` | list[string]/null | No | null | Seedance 2.x reference audio inputs. |
+| `generate_audio` | boolean | No | false | Seedance audio generation. May increase provider cost. |
+| `web_search` | boolean | No | false | Seedance 2.x web search option. |
+| `fixed_lens` | boolean | No | false | Seedance camera/lens lock option. |
 | `callback_url` | string/null | No | null | Sent as `callBackUrl`. |
 | `upload_path` | string | No | `kie-mcp/videos` | Upload path for local image inputs. |
 | `save_job` | string/null | No | null | Local job record path. |
@@ -287,6 +296,18 @@ Routing:
 - `grok` without images -> `grok-imagine/text-to-video`
 - `grok` with images -> `grok-imagine/image-to-video`
 - `veo3` -> selected `veo_model`
+- `seedance` -> selected `seedance_model`
+
+Seedance notes:
+
+- Seedance 2.x sends first/last frames or multimodal reference media, but not both in the same request.
+- Seedance 1.5 Pro uses `image` values as `input_urls` and supports at most two images.
+- `generate_audio` defaults to false to avoid surprise provider cost.
+
+Known live Seedance smoke result from June 8, 2026:
+
+- Text-only `16:9`, `seedance-2-fast`, `480p`, 4 seconds, no audio: `succeeded`, job `6817d78635f5cb860953e1c6e85dbee4`.
+- Image-reference `9:16`, `seedance-2-fast`, `480p`, 4 seconds, no audio: `succeeded`, job `da5ba959f49365b5074c012ab037d790`.
 
 ### `kie_chat_completion`
 

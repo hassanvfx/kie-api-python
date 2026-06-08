@@ -62,6 +62,28 @@ def test_mcp_video_dry_run_builds_veo_payload():
     assert result["payload"]["generationType"] == "TEXT_2_VIDEO"
 
 
+def test_mcp_video_dry_run_builds_seedance_payload():
+    result = mcp_server.kie_generate_video(
+        "seedance",
+        "cinematic product reveal",
+        seedance_model="seedance-2-fast",
+        reference_image=["https://example.com/ref.png"],
+        reference_video=["https://example.com/ref.mp4"],
+        reference_audio=["https://example.com/ref.mp3"],
+        duration=9,
+        web_search=True,
+    )
+
+    assert result["status"] == "dry_run"
+    assert result["route"] == "market"
+    assert result["model"] == "bytedance/seedance-2-fast"
+    assert result["payload"]["input"]["reference_image_urls"] == ["https://example.com/ref.png"]
+    assert result["payload"]["input"]["reference_video_urls"] == ["https://example.com/ref.mp4"]
+    assert result["payload"]["input"]["reference_audio_urls"] == ["https://example.com/ref.mp3"]
+    assert result["payload"]["input"]["duration"] == 9
+    assert [item["kind"] for item in result["resolvedMedia"]] == ["image", "video", "audio"]
+
+
 def test_mcp_chat_dry_run_builds_gpt_payload():
     result = mcp_server.kie_chat_completion(
         "gpt-5-2",

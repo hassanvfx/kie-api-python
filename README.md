@@ -126,7 +126,7 @@ Global behavior:
 | `KIE_BASE_URL` | No | `https://api.kie.ai` | generation, chat, status | Override only for alternate deployments. |
 | `KIE_UPLOAD_BASE_URL` | No | `https://kieai.redpandaai.co` | upload/local media | Used for temporary file uploads. |
 | `RUN_KIE_LIVE_TESTS` | No | unset | integration tests | Set to `1` to run live tests. |
-| `KIE_LIVE_SCOPE` | No | `all` | integration tests | `llm`, `gemini`, `image`, `video`, `suno`, `generation`, or `all`. |
+| `KIE_LIVE_SCOPE` | No | `all` | integration tests | `llm`, `gemini`, `image`, `video`, `seedance`, `suno`, `generation`, or `all`. |
 | `KIE_LIVE_POLL_INTERVAL` | No | `10` | integration tests | Seconds between live poll attempts. |
 | `KIE_LIVE_TIMEOUT` | No | `900` | integration tests | Live polling timeout in seconds. |
 | `KIE_SUNO_CALLBACK_URL` | Sometimes | None | Suno live tests | Suno music/lyrics may require callback URLs. |
@@ -224,24 +224,36 @@ Models:
 | `grok` | `grok-imagine/text-to-video` | Used when no images are provided. |
 | `grok` | `grok-imagine/image-to-video` | Used when one or more images are provided. |
 | `veo3` | `veo3`, `veo3_fast`, or `veo3_lite` | Chosen by `--veo-model`. |
+| `seedance` | `bytedance/seedance-2-fast` | Default Seedance 2.0 Fast model. |
+| `seedance` | `bytedance/seedance-2` | Chosen with `--seedance-model seedance-2`. |
+| `seedance` | `bytedance/seedance-1.5-pro` | Chosen with `--seedance-model seedance-1.5-pro`. |
 
 Parameters:
 
 | Parameter | Required | Default | Notes |
 |---|---:|---|---|
-| `MODEL` | Yes | None | `grok` or `veo3`. |
+| `MODEL` | Yes | None | `grok`, `veo3`, or `seedance`. |
 | `--prompt` | Yes* | None | Inline prompt. |
 | `--prompt-file` | Yes* | None | Prompt file. |
 | `--image` | No | repeatable empty list | Local file or URL. Can be repeated. |
 | `--aspect-ratio` | No | `2:3` for Grok text, `16:9` for Grok image/Veo | Provider-specific aspect ratio. |
 | `--mode` | No | `normal` | Grok only: `fun`, `normal`, or `spicy`. |
-| `--duration` | No | `6` | Grok duration. Text mode sends integer; image mode sends string. |
-| `--resolution` | No | `480p` for Grok, `720p` for Veo | Provider-specific resolution. |
-| `--nsfw-checker` | No | false | Grok payload flag. |
+| `--duration` | No | `6` for Grok, `5` for Seedance | Provider-specific duration. |
+| `--resolution` | No | `480p` for Grok, `720p` for Veo/Seedance | Provider-specific resolution. |
+| `--nsfw-checker` | No | false | Grok/Seedance payload flag. |
 | `--veo-model` | No | `veo3_fast` | Veo only: `veo3`, `veo3_fast`, or `veo3_lite`. |
+| `--seedance-model` | No | `seedance-2-fast` | Seedance only: `seedance-2-fast`, `seedance-2`, or `seedance-1.5-pro`. |
 | `--generation-type` | No | inferred | Veo only: `TEXT_2_VIDEO`, `FIRST_AND_LAST_FRAMES_2_VIDEO`, or `REFERENCE_2_VIDEO`. |
 | `--disable-translation` | No | false | Veo only. Sends `enableTranslation=false`. |
 | `--watermark` | No | None | Veo watermark string. |
+| `--first-frame` | No | None | Seedance 2.x first-frame image, local path or URL. |
+| `--last-frame` | No | None | Seedance 2.x last-frame image, local path or URL. |
+| `--reference-image` | No | repeatable empty list | Seedance 2.x reference image, local path or URL. |
+| `--reference-video` | No | repeatable empty list | Seedance 2.x reference video, local path or URL. |
+| `--reference-audio` | No | repeatable empty list | Seedance 2.x reference audio, local path or URL. |
+| `--generate-audio` | No | false | Seedance audio generation. May increase provider cost. |
+| `--web-search` | No | false | Seedance 2.x web search option. |
+| `--fixed-lens` | No | false | Seedance camera/lens lock option. |
 | `--callback-url` | No | None | Provider callback URL. |
 | `--upload-path` | No | `kie-cli/videos` | Upload path for local images. |
 | `--save-job` | No | None | Writes a job record. |
@@ -267,7 +279,27 @@ kie-cli video veo3 \
   --generation-type TEXT_2_VIDEO \
   --watermark "kie-api" \
   --json
+
+kie-cli video seedance \
+  --prompt "A sweeping cinematic reveal of a neon city at sunrise" \
+  --seedance-model seedance-2-fast \
+  --duration 5 \
+  --save-job outputs/jobs/seedance-video.json \
+  --json
+
+kie-cli video seedance \
+  --prompt "Create a smooth transition between these two frames" \
+  --first-frame ./first.png \
+  --last-frame ./last.png \
+  --json
 ```
+
+Live Seedance smoke proof from June 8, 2026:
+
+| Case | Settings | Result |
+|---|---|---|
+| Text-only video | `seedance-2-fast`, `16:9`, `480p`, 4 seconds, no audio | `succeeded`: `6817d78635f5cb860953e1c6e85dbee4` |
+| Image-reference video | `seedance-2-fast`, `9:16`, `480p`, 4 seconds, no audio, uploaded PNG first frame | `succeeded`: `da5ba959f49365b5074c012ab037d790` |
 
 ### `kie-cli llm`
 

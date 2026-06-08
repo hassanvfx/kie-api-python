@@ -2,6 +2,7 @@ import json
 
 from kie_cli.cli import main
 from kie_cli.media import resolve_media_inputs
+from kie_cli.routes import route_for_model
 from kie_cli.status import normalize_market_status, normalize_veo_status
 
 
@@ -88,6 +89,14 @@ def test_normalize_veo_success():
     assert result["ok"] is True
     assert result["status"] == "succeeded"
     assert result["outputUrl"] == "https://example.com/video.mp4"
+
+
+def test_seedance_routes_to_market_status_endpoint():
+    route = route_for_model("bytedance/seedance-2-fast")
+
+    assert route.route == "market"
+    assert route.submit_endpoint == "/api/v1/jobs/createTask"
+    assert route.status_endpoint == "/api/v1/jobs/recordInfo"
 
 
 def test_cli_dry_run_gpt_image_2_remote_url(capsys):

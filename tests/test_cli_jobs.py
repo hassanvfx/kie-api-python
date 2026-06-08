@@ -217,6 +217,88 @@ def test_cli_video_veo_save_job_writes_record(monkeypatch, tmp_path, capsys):
     assert record.rawSubmitResponse == FakeKieClient.veo_submit_response
 
 
+def test_cli_video_seedance_dry_run_json(monkeypatch, capsys):
+    install_fake_client(monkeypatch)
+
+    exit_code = main(
+        [
+            "video",
+            "seedance",
+            "--prompt",
+            "A sweeping cinematic reveal of a neon city",
+            "--seedance-model",
+            "seedance-2-fast",
+            "--json",
+            "--dry-run",
+        ]
+    )
+
+    assert exit_code == 0
+    output = json.loads(capsys.readouterr().out)
+    assert output["status"] == "dry_run"
+    assert output["route"] == "market"
+    assert output["model"] == "bytedance/seedance-2-fast"
+    assert output["payload"]["input"]["duration"] == 5
+    assert output["payload"]["input"]["generate_audio"] is False
+
+
+def test_cli_video_seedance_local_frames_dry_run(capsys):
+    exit_code = main(
+        [
+            "video",
+            "seedance",
+            "--prompt",
+            "Transition between the supplied start and end frames",
+            "--first-frame",
+            "first.png",
+            "--last-frame",
+            "last.png",
+            "--dry-run",
+            "--json",
+        ]
+    )
+
+    assert exit_code == 0
+    output = json.loads(capsys.readouterr().out)
+    assert output["payload"]["input"]["first_frame_url"] == "dry-run://uploaded/first.png"
+    assert output["payload"]["input"]["last_frame_url"] == "dry-run://uploaded/last.png"
+    assert [item["kind"] for item in output["resolvedMedia"]] == ["image", "image"]
+    assert all(item["uploaded"] is True for item in output["resolvedMedia"])
+
+
+def test_cli_video_seedance_save_job_writes_market_record(monkeypatch, tmp_path, capsys):
+    install_fake_client(monkeypatch)
+    job_file = tmp_path / "jobs" / "seedance-job.json"
+
+    exit_code = main(
+        [
+            "video",
+            "seedance",
+            "--prompt",
+            "A calm aerial shot over glass towers at sunrise",
+            "--seedance-model",
+            "seedance-2-fast",
+            "--save-job",
+            str(job_file),
+            "--json",
+        ]
+    )
+
+    assert exit_code == 0
+    output = json.loads(capsys.readouterr().out)
+    assert output["ok"] is True
+    assert output["jobId"] == "task_123"
+    assert output["jobFile"] == str(job_file)
+
+    record = read_job_record(job_file)
+    assert record.jobId == "task_123"
+    assert record.model == "bytedance/seedance-2-fast"
+    assert record.submitEndpoint == "/api/v1/jobs/createTask"
+    assert record.statusEndpoint == "/api/v1/jobs/recordInfo"
+    assert record.submittedPayload["model"] == "bytedance/seedance-2-fast"
+    assert record.rawSubmitResponse == FakeKieClient.market_submit_response
+
+
 def test_cli_suno_music_dry_run_json(monkeypatch, capsys):
     install_fake_client(monkeypatch)
 

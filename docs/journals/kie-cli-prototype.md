@@ -28,6 +28,114 @@
 | Task 23 | 2026-06-06 | Complete | Added persistent KIE.AI brand lockup and author byline requirements to every campaign image prompt. |
 | Task 24 | 2026-06-06 | Complete | Added copy-ready slide-to-video prompts for every LinkedIn campaign image. |
 | Task 25 | 2026-06-06 | Complete | Added the rendered marketing deck PDF plus a lightweight browser viewer. |
+| Task 26 | 2026-06-08 | Complete | Added first-class Bytedance Seedance support to the existing video CLI/MCP workflows. |
+| Task 27 | 2026-06-08 | Complete | Proved disposable live Seedance video generation with and without image references at low-cost settings. |
+| Task 28 | 2026-06-08 | Complete | Documented the live Seedance smoke proof, then prepared the Seedance implementation for commit and push. |
+
+---
+
+## Task 28: Seedance Docs Commit And Push
+
+### Request
+
+Update docs, commit the Seedance work, and push it to the repository.
+
+### Implementation Summary
+
+- Added live Seedance smoke-proof summaries to `README.md` and `docs/mcp.md`.
+- Kept disposable generated output files ignored under `outputs/`, while preserving tracked proof details in docs and the journal.
+- Prepared all Seedance implementation, docs, MCP resources, tests, and journal updates for a single commit.
+
+### Status
+
+Complete.
+
+### Verification
+
+Pending final pre-commit checks.
+
+---
+
+## Task 27: Disposable Seedance Live Proof
+
+### Request
+
+Prove that Seedance can generate short disposable videos both without image references and with image references, covering `16:9` and `9:16` at the cheapest practical settings.
+
+### Implementation Summary
+
+- Selected two low-cost smoke cases:
+  - Text-only `16:9`, `seedance-2-fast`, `480p`, `duration=4`, `generate_audio=false`.
+  - Image-reference `9:16`, `seedance-2-fast`, `480p`, `duration=4`, `generate_audio=false`, using `tests/fixtures/images/synthetic_reference_a.png`.
+- Ran dry-runs for both cases and verified payloads route through KIE Market with the expected Seedance model and settings.
+- Confirmed the reference-image dry-run maps the local image to `first_frame_url` and includes uploaded media metadata.
+
+### Status
+
+Complete.
+
+### Verification
+
+Dry-run commands completed successfully:
+
+```bash
+.venv/bin/kie-cli video seedance --seedance-model seedance-2-fast --aspect-ratio 16:9 --resolution 480p --duration 4 --dry-run --json
+.venv/bin/kie-cli video seedance --seedance-model seedance-2-fast --image tests/fixtures/images/synthetic_reference_a.png --aspect-ratio 9:16 --resolution 480p --duration 4 --dry-run --json
+```
+
+The first live submit attempt failed inside the network-restricted sandbox with DNS resolution for `api.kie.ai`; the escalated retry was rejected pending explicit approval for paid external Seedance jobs. After explicit approval, both live jobs succeeded.
+
+Live proof results:
+
+```text
+text_16x9
+jobId: 6817d78635f5cb860953e1c6e85dbee4
+model: bytedance/seedance-2-fast
+settings: 16:9, 480p, duration 4, generate_audio=false, no image reference
+status: succeeded
+outputUrl: https://tempfile.aiquickdraw.com/r/6817d78635f5cb860953e1c6e85dbee4_1780879532_e6b0b94l.mp4
+jobFile: outputs/seedance_live_probe_20260608/text_16x9_job.json
+finalFile: outputs/seedance_live_probe_20260608/text_16x9_final.json
+
+reference_9x16
+jobId: da5ba959f49365b5074c012ab037d790
+model: bytedance/seedance-2-fast
+settings: 9:16, 480p, duration 4, generate_audio=false, image reference uploaded from tests/fixtures/images/synthetic_reference_a.png
+status: succeeded
+outputUrl: https://tempfile.aiquickdraw.com/r/da5ba959f49365b5074c012ab037d790_1780879543_rwm32b4s.mp4
+jobFile: outputs/seedance_live_probe_20260608/reference_9x16_job.json
+finalFile: outputs/seedance_live_probe_20260608/reference_9x16_final.json
+```
+
+---
+
+## Task 26: Seedance Video Generation Support
+
+### Request
+
+Add Bytedance Seedance generation to the existing KIE video surface with the same strong CLI/MCP behavior as image, Grok/Veo, and Suno workflows.
+
+### Implementation Summary
+
+- Added Seedance payload support for `bytedance/seedance-2-fast`, `bytedance/seedance-2`, and `bytedance/seedance-1.5-pro`.
+- Extended `kie-cli video` and MCP `kie_generate_video` with the `seedance` alias, Seedance model selection, frame inputs, multimodal references, audio generation, web search, fixed lens, dry-run, upload, save-job, and wait/status routing support.
+- Routed Seedance provider models through the existing KIE Market async endpoints.
+- Updated MCP resources, README, MCP docs, comprehensive guide, unit tests, CLI tests, MCP tests, and gated live integration coverage.
+
+### Status
+
+Complete.
+
+### Verification
+
+Ran:
+
+```bash
+git diff --check
+.venv/bin/python -m pytest -q
+```
+
+Result: no whitespace errors; 71 passed, 12 skipped. Live Seedance coverage is gated behind `RUN_KIE_LIVE_TESTS=1` and `KIE_LIVE_SCOPE=seedance`.
 
 ---
 

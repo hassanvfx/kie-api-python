@@ -10,6 +10,18 @@ GPT_IMAGE_2_IMAGE = "gpt-image-2-image-to-image"
 GROK_TEXT_TO_VIDEO = "grok-imagine/text-to-video"
 GROK_IMAGE_TO_VIDEO = "grok-imagine/image-to-video"
 VEO_MODELS = {"veo3", "veo3_fast", "veo3_lite"}
+SEEDANCE_2_FAST = "bytedance/seedance-2-fast"
+SEEDANCE_2 = "bytedance/seedance-2"
+SEEDANCE_1_5_PRO = "bytedance/seedance-1.5-pro"
+SEEDANCE_MODELS = {SEEDANCE_2_FAST, SEEDANCE_2, SEEDANCE_1_5_PRO}
+SEEDANCE_MODEL_ALIASES = {
+    "seedance-2-fast": SEEDANCE_2_FAST,
+    "seedance-2": SEEDANCE_2,
+    "seedance-1.5-pro": SEEDANCE_1_5_PRO,
+    SEEDANCE_2_FAST: SEEDANCE_2_FAST,
+    SEEDANCE_2: SEEDANCE_2,
+    SEEDANCE_1_5_PRO: SEEDANCE_1_5_PRO,
+}
 SUNO_MUSIC_MODEL = "suno-music"
 SUNO_LYRICS_MODEL = "suno-lyrics"
 SUNO_SOUNDS_MODEL = "suno-sounds"
@@ -132,6 +144,110 @@ def build_veo_payload(
     if callback_url:
         payload["callBackUrl"] = callback_url
 
+    return payload
+
+
+def build_seedance_payload(
+    *,
+    prompt: str,
+    model: str = "seedance-2-fast",
+    input_urls: list[str] | None = None,
+    first_frame_url: str | None = None,
+    last_frame_url: str | None = None,
+    reference_image_urls: list[str] | None = None,
+    reference_video_urls: list[str] | None = None,
+    reference_audio_urls: list[str] | None = None,
+    aspect_ratio: str = "16:9",
+    resolution: str = "720p",
+    duration: int | str = 5,
+    fixed_lens: bool = False,
+    generate_audio: bool = False,
+    web_search: bool = False,
+    nsfw_checker: bool = False,
+    callback_url: str | None = None,
+) -> dict[str, Any]:
+    provider_model = SEEDANCE_MODEL_ALIASES.get(model)
+    if provider_model is None:
+        raise ValueError(f"Unsupported Seedance model: {model}")
+
+    image_inputs = input_urls or []
+    reference_images = reference_image_urls or []
+    reference_videos = reference_video_urls or []
+    reference_audios = reference_audio_urls or []
+
+    if provider_model == SEEDANCE_1_5_PRO:
+        if first_frame_url or last_frame_url:
+            raise ValueError("Seedance 1.5 Pro does not support first/last frame fields; use --image.")
+        if reference_images or reference_videos or reference_audios:
+            raise ValueError("Seedance 1.5 Pro does not support reference media fields; use --image.")
+        if web_search:
+            raise ValueError("Seedance 1.5 Pro does not support web_search.")
+        if len(image_inputs) > 2:
+            raise ValueError("Seedance 1.5 Pro supports at most 2 input images.")
+
+        input_payload: dict[str, Any] = {
+            "prompt": prompt,
+            "aspect_ratio": aspect_ratio,
+            "resolution": resolution,
+            "duration": str(duration),
+            "fixed_lens": fixed_lens,
+            "generate_audio": generate_audio,
+            "nsfw_checker": nsfw_checker,
+        }
+        if image_inputs:
+            input_payload["input_urls"] = image_inputs
+
+        payload: dict[str, Any] = {"model": provider_model, "input": input_payload}
+        if callback_url:
+            payload["callBackUrl"] = callback_url
+        return payload
+
+    if image_inputs and (first_frame_url or last_frame_url):
+        raise ValueError("Use either --image or explicit first/last frame fields for Seedance 2.x, not both.")
+
+    if image_inputs:
+        if len(image_inputs) > 2:
+            raise ValueError("Seedance 2.x supports at most 2 --image values for first/last frames.")
+        first_frame_url = first_frame_url or image_inputs[0]
+        if len(image_inputs) == 2:
+            last_frame_url = last_frame_url or image_inputs[1]
+
+    has_frame_inputs = bool(first_frame_url or last_frame_url)
+    has_reference_inputs = bool(reference_images or reference_videos or reference_audios)
+    if has_frame_inputs and has_reference_inputs:
+        raise ValueError("Seedance 2.x frame inputs and reference media inputs are mutually exclusive.")
+    if len(reference_images) > 9:
+        raise ValueError("Seedance 2.x supports at most 9 reference images.")
+    if len(reference_videos) > 3:
+        raise ValueError("Seedance 2.x supports at most 3 reference videos.")
+    if len(reference_audios) > 3:
+        raise ValueError("Seedance 2.x supports at most 3 reference audio files.")
+
+    input_payload = {
+        "prompt": prompt,
+        "generate_audio": generate_audio,
+        "resolution": resolution,
+        "aspect_ratio": aspect_ratio,
+        "duration": int(duration),
+        "web_search": web_search,
+        "nsfw_checker": nsfw_checker,
+    }
+    if first_frame_url:
+        input_payload["first_frame_url"] = first_frame_url
+    if last_frame_url:
+        input_payload["last_frame_url"] = last_frame_url
+    if reference_images:
+        input_payload["reference_image_urls"] = reference_images
+    if reference_videos:
+        input_payload["reference_video_urls"] = reference_videos
+    if reference_audios:
+        input_payload["reference_audio_urls"] = reference_audios
+    if fixed_lens:
+        input_payload["fixed_lens"] = fixed_lens
+
+    payload = {"model": provider_model, "input": input_payload}
+    if callback_url:
+        payload["callBackUrl"] = callback_url
     return payload
 
 
