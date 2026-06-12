@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "kie-api": {
-      "command": "/Users/hassan/repos/kie-api/.venv/bin/kie-mcp",
+      "command": "/absolute/path/to/your/kie-api/scripts/run_kie_mcp.sh",
       "env": {
         "KIE_API_KEY": "replace_with_your_kie_api_key"
       }

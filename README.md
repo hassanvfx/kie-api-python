@@ -543,6 +543,12 @@ Install MCP support:
 .venv/bin/python -m pip install -e ".[dev,mcp]"
 ```
 
+Run the helper launcher:
+
+```bash
+./scripts/run_kie_mcp.sh
+```
+
 Run the server manually:
 
 ```bash
@@ -557,7 +563,7 @@ Minimal MCP client config:
 {
   "mcpServers": {
     "kie-api": {
-      "command": "/Users/hassan/repos/kie-api/.venv/bin/kie-mcp",
+      "command": "/absolute/path/to/your/kie-api/scripts/run_kie_mcp.sh",
       "env": {
         "KIE_API_KEY": "replace_with_your_kie_api_key"
       }
@@ -565,6 +571,8 @@ Minimal MCP client config:
   }
 }
 ```
+
+Replace the `command` path with the location of your own local clone.
 
 The committed files in `examples/mcp/` intentionally use placeholders. A real user should either let `kie-mcp` load their local `.env`, or put their real key only in a private MCP client config outside Git.
 

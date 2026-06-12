@@ -38,6 +38,12 @@ KIE_UPLOAD_BASE_URL=https://kieai.redpandaai.co
 
 ## Run
 
+Recommended local launcher:
+
+```bash
+./scripts/run_kie_mcp.sh
+```
+
 Manual server start:
 
 ```bash
@@ -115,7 +121,7 @@ They should not edit committed example JSON files with a real key.
 {
   "mcpServers": {
     "kie-api": {
-      "command": "/Users/hassan/repos/kie-api/.venv/bin/kie-mcp",
+      "command": "/absolute/path/to/your/kie-api/scripts/run_kie_mcp.sh",
       "env": {
         "KIE_API_KEY": "replace_with_your_kie_api_key"
       }
@@ -123,6 +129,8 @@ They should not edit committed example JSON files with a real key.
   }
 }
 ```
+
+Replace the `command` path with your own clone location.
 
 Commit only placeholders. Put the real key in your private client config.
 
@@ -154,7 +162,7 @@ Use the shape in `examples/mcp/codex_config.json`:
 {
   "mcpServers": {
     "kie-api": {
-      "command": "/Users/hassan/repos/kie-api/.venv/bin/kie-mcp",
+      "command": "/absolute/path/to/your/kie-api/scripts/run_kie_mcp.sh",
       "env": {
         "KIE_API_KEY": "replace_with_your_kie_api_key"
       }
@@ -162,6 +170,8 @@ Use the shape in `examples/mcp/codex_config.json`:
   }
 }
 ```
+
+Replace the `command` path with your own clone location, then reload Codex.
 
 After adding it, reload Codex or start a new thread and ask:
 
@@ -504,7 +514,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 async def main():
-    params = StdioServerParameters(command=".venv/bin/kie-mcp", args=[])
+    params = StdioServerParameters(command="./scripts/run_kie_mcp.sh", args=[])
     async with stdio_client(params) as (read, write):
         async with ClientSession(read, write) as session:
             await session.initialize()
