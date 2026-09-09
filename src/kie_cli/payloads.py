@@ -13,15 +13,25 @@ VEO_MODELS = {"veo3", "veo3_fast", "veo3_lite"}
 SEEDANCE_2_FAST = "bytedance/seedance-2-fast"
 SEEDANCE_2 = "bytedance/seedance-2"
 SEEDANCE_1_5_PRO = "bytedance/seedance-1.5-pro"
-SEEDANCE_MODELS = {SEEDANCE_2_FAST, SEEDANCE_2, SEEDANCE_1_5_PRO}
+SEEDANCE_2_5 = "bytedance/seedance-2-5"
+SEEDANCE_MODELS = {SEEDANCE_2_FAST, SEEDANCE_2, SEEDANCE_1_5_PRO, SEEDANCE_2_5}
 SEEDANCE_MODEL_ALIASES = {
     "seedance-2-fast": SEEDANCE_2_FAST,
     "seedance-2": SEEDANCE_2,
     "seedance-1.5-pro": SEEDANCE_1_5_PRO,
+    "seedance-2.5": SEEDANCE_2_5,
     SEEDANCE_2_FAST: SEEDANCE_2_FAST,
     SEEDANCE_2: SEEDANCE_2,
     SEEDANCE_1_5_PRO: SEEDANCE_1_5_PRO,
+    SEEDANCE_2_5: SEEDANCE_2_5,
 }
+SEEDANCE_2X_REFERENCE_IMAGE_CAP = {SEEDANCE_2_5: 30}
+"""Seedance 2.5 accepts up to 30 combined reference_image_urls/first-last-frame
+images (docs.kie.ai/market/bytedance/seedance-2-5), vs the 9-image cap that
+applies to seedance-2/seedance-2-fast -- everything else about the "2.x"
+payload shape (duration is never range-validated client-side here, matching
+this module's existing posture of leaving that to the caller; resolution/
+aspect_ratio are unrestricted strings) is identical across all three."""
 SUNO_MUSIC_MODEL = "suno-music"
 SUNO_LYRICS_MODEL = "suno-lyrics"
 SUNO_SOUNDS_MODEL = "suno-sounds"
@@ -216,8 +226,9 @@ def build_seedance_payload(
     has_reference_inputs = bool(reference_images or reference_videos or reference_audios)
     if has_frame_inputs and has_reference_inputs:
         raise ValueError("Seedance 2.x frame inputs and reference media inputs are mutually exclusive.")
-    if len(reference_images) > 9:
-        raise ValueError("Seedance 2.x supports at most 9 reference images.")
+    max_reference_images = SEEDANCE_2X_REFERENCE_IMAGE_CAP.get(provider_model, 9)
+    if len(reference_images) > max_reference_images:
+        raise ValueError(f"Seedance 2.x supports at most {max_reference_images} reference images.")
     if len(reference_videos) > 3:
         raise ValueError("Seedance 2.x supports at most 3 reference videos.")
     if len(reference_audios) > 3:

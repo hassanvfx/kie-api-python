@@ -135,6 +135,51 @@ def test_seedance_1_5_payload_uses_input_urls_and_string_duration():
     assert payload["input"]["fixed_lens"] is True
 
 
+def test_seedance_2_5_payload_supports_extended_reference_images():
+    payload = build_seedance_payload(
+        prompt="a 30-second cinematic product journey",
+        model="seedance-2.5",
+        reference_image_urls=[f"https://example.com/ref{i}.png" for i in range(30)],
+        duration=30,
+        resolution="1080p",
+        aspect_ratio="9:16",
+        generate_audio=True,
+    )
+
+    assert payload["model"] == "bytedance/seedance-2-5"
+    assert len(payload["input"]["reference_image_urls"]) == 30
+    assert payload["input"]["duration"] == 30
+    assert payload["input"]["resolution"] == "1080p"
+    assert payload["input"]["aspect_ratio"] == "9:16"
+    assert payload["input"]["generate_audio"] is True
+
+
+def test_seedance_2_5_rejects_more_than_30_reference_images():
+    try:
+        build_seedance_payload(
+            prompt="too many references",
+            model="seedance-2.5",
+            reference_image_urls=[f"https://example.com/ref{i}.png" for i in range(31)],
+        )
+    except ValueError as exc:
+        assert "30 reference images" in str(exc)
+    else:
+        raise AssertionError("Expected more than 30 reference images to fail for seedance-2.5")
+
+
+def test_seedance_2_fast_still_rejects_more_than_9_reference_images():
+    try:
+        build_seedance_payload(
+            prompt="too many references",
+            model="seedance-2-fast",
+            reference_image_urls=[f"https://example.com/ref{i}.png" for i in range(10)],
+        )
+    except ValueError as exc:
+        assert "9 reference images" in str(exc)
+    else:
+        raise AssertionError("Expected more than 9 reference images to fail for seedance-2-fast")
+
+
 def test_seedance_2_rejects_mixed_frame_and_reference_inputs():
     try:
         build_seedance_payload(

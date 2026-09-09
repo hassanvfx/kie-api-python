@@ -113,7 +113,7 @@ def build_parser() -> argparse.ArgumentParser:
     video.add_argument(
         "--seedance-model",
         default="seedance-2-fast",
-        choices=["seedance-2-fast", "seedance-2", "seedance-1.5-pro"],
+        choices=["seedance-2-fast", "seedance-2", "seedance-1.5-pro", "seedance-2.5"],
     )
     video.add_argument(
         "--generation-type",
