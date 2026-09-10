@@ -194,6 +194,50 @@ Parameters:
 | `--dry-run` | No | false | Shows payload and resolved media without submitting. |
 | `--json` | No | false | Emits JSON output. |
 
+
+## Speech (ElevenLabs)
+
+```bash
+# one voice, with word-level timings for caption sync
+kie-cli speech elevenlabs-tts --prompt "One hundred milligrams of caffeine." \
+  --voice EkK5I93UQWFDigLMpZcX --timestamps --json
+
+# two speakers
+kie-cli speech elevenlabs-dialogue \
+  --dialogue '[{"text":"Coffee?","voice":"A"},{"text":"You can chew it.","voice":"B"}]' --json
+
+# hear a voice before choosing it -- no API call needed
+kie-cli voices N2lVS1w4EtoT3dr4eOWO --json
+```
+
+Models:
+
+| CLI Model | Routed Model | Notes |
+|---|---|---|
+| `elevenlabs-tts`, `elevenlabs-v2` | `elevenlabs/text-to-speech-multilingual-v2` | One voice. Supports `--timestamps`, which returns **word-level timings** -- the only way to sync burned-in captions to the actual read. |
+| `elevenlabs-dialogue`, `elevenlabs-v3` | `elevenlabs/text-to-dialogue-v3` | Multiple speakers via `--dialogue`, one voice per line. **No timestamps**, so choosing it means accepting estimated caption timing. |
+
+Parameters (`speech`):
+
+| Parameter | Required | Default | Notes |
+|---|---:|---|---|
+| `MODEL` | No | `elevenlabs-tts` | see the table above |
+| `--prompt` / `--prompt-file` | Yes* | None | the text to speak; not used by `elevenlabs-dialogue` |
+| `--voice` | No | `EkK5I93UQWFDigLMpZcX` (James) | a voice id (preferred) or a preset name like `Rachel` |
+| `--stability` | No | provider default | 0-1 on v2; **only 0, 0.5 or 1.0 on v3** |
+| `--similarity-boost` | No | provider default | 0-1 |
+| `--style` | No | provider default | 0-1 |
+| `--speed` | No | provider default | 0.7-1.2 |
+| `--timestamps` | No | false | word-level timings; v2 only |
+| `--previous-text` / `--next-text` | No | None | the surrounding copy, so a script split into segments keeps continuous prosody |
+| `--language-code` | No | auto | ISO 639-1 |
+| `--dialogue` | v3 only | None | JSON array of `{text, voice}`, or `@path.json`. The 5,000-character limit is the **sum** across lines |
+| `--callback-url`, `--save-job`, `--dry-run`, `--json` | No | | as elsewhere |
+
+Voice previews are plain files at
+`https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3`, so a preview
+UI needs no API call and no backend.
+
 Examples:
 
 ```bash

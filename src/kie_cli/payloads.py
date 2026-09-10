@@ -488,3 +488,142 @@ def build_gpt_image_2_5_payload(
     if callback_url:
         payload["callBackUrl"] = callback_url
     return payload
+
+
+ELEVENLABS_TTS = "elevenlabs/text-to-speech-multilingual-v2"
+ELEVENLABS_DIALOGUE = "elevenlabs/text-to-dialogue-v3"
+ELEVENLABS_MODELS = {ELEVENLABS_TTS, ELEVENLABS_DIALOGUE}
+ELEVENLABS_ALIASES = {
+    "elevenlabs-tts": ELEVENLABS_TTS,
+    "elevenlabs-v2": ELEVENLABS_TTS,
+    "elevenlabs-dialogue": ELEVENLABS_DIALOGUE,
+    "elevenlabs-v3": ELEVENLABS_DIALOGUE,
+    ELEVENLABS_TTS: ELEVENLABS_TTS,
+    ELEVENLABS_DIALOGUE: ELEVENLABS_DIALOGUE,
+}
+
+ELEVENLABS_DEFAULT_VOICE = "EkK5I93UQWFDigLMpZcX"
+"""James, the default the docs name. A voice id is preferred over a preset
+name because names are not stable across the catalog."""
+
+ELEVENLABS_MAX_TEXT_CHARS = 5000
+"""Per docs, and for `text-to-dialogue-v3` the limit is the SUM across every
+line of the dialogue array, not per line -- so it is checked on the total."""
+
+ELEVENLABS_VOICE_PREVIEW_URL = "https://static.aiquickdraw.com/elevenlabs/voice/{voice_id}.mp3"
+"""Previews are plain files at a predictable URL, so a preview UI needs no
+backend at all."""
+
+ELEVENLABS_DIALOGUE_STABILITIES = (0.0, 0.5, 1.0)
+"""`text-to-dialogue-v3` accepts only these three, unlike v2's continuous
+0-1 range. Passing 0.75 to v3 is a 422, so it is rejected locally."""
+
+
+def _check_range(name: str, value: float | None, low: float, high: float) -> None:
+    if value is None:
+        return
+    if not (low <= float(value) <= high):
+        raise ValueError(f"{name} must be between {low} and {high}, got {value}")
+
+
+def build_elevenlabs_tts_payload(
+    *,
+    text: str,
+    voice: str = ELEVENLABS_DEFAULT_VOICE,
+    stability: float | None = None,
+    similarity_boost: float | None = None,
+    style: float | None = None,
+    speed: float | None = None,
+    timestamps: bool | None = None,
+    previous_text: str | None = None,
+    next_text: str | None = None,
+    language_code: str | None = None,
+    callback_url: str | None = None,
+) -> dict[str, Any]:
+    """`elevenlabs/text-to-speech-multilingual-v2`.
+
+    Two parameters carry more weight than their size suggests.
+    `timestamps=True` returns WORD-LEVEL timings, which is what lets a caller
+    sync burned-in captions to the actual narration instead of estimating.
+    `previous_text`/`next_text` give the model the surrounding copy so that a
+    long script split into per-shot segments keeps continuous prosody rather
+    than restarting its intonation on every segment.
+
+    Optional fields are omitted rather than defaulted, so the provider's own
+    defaults apply instead of ones this client invents.
+    """
+    if not text or not text.strip():
+        raise ValueError("text is required")
+    if len(text) > ELEVENLABS_MAX_TEXT_CHARS:
+        raise ValueError(f"text must be at most {ELEVENLABS_MAX_TEXT_CHARS} characters, got {len(text)}")
+    if not voice or not voice.strip():
+        raise ValueError("voice is required (a voice id, or a preset name like 'Rachel')")
+    _check_range("stability", stability, 0.0, 1.0)
+    _check_range("similarity_boost", similarity_boost, 0.0, 1.0)
+    _check_range("style", style, 0.0, 1.0)
+    _check_range("speed", speed, 0.7, 1.2)
+
+    input_payload: dict[str, Any] = {"text": text, "voice": voice}
+    for key, value in (
+        ("stability", stability), ("similarity_boost", similarity_boost), ("style", style),
+        ("speed", speed), ("timestamps", timestamps), ("previous_text", previous_text),
+        ("next_text", next_text), ("language_code", language_code),
+    ):
+        if value is not None:
+            input_payload[key] = value
+
+    payload: dict[str, Any] = {"model": ELEVENLABS_TTS, "input": input_payload}
+    if callback_url:
+        payload["callBackUrl"] = callback_url
+    return payload
+
+
+def build_elevenlabs_dialogue_payload(
+    *,
+    dialogue: list[dict[str, str]],
+    stability: float | None = None,
+    language_code: str | None = None,
+    callback_url: str | None = None,
+) -> dict[str, Any]:
+    """`elevenlabs/text-to-dialogue-v3`: multi-speaker, one voice per line.
+
+    Note what this model does NOT have: `timestamps`. So a caller who needs
+    word timings -- to sync captions, for instance -- must either accept
+    estimated timings or render each speaker's line separately on the v2
+    model. That asymmetry is the main reason to choose between the two.
+    """
+    if not dialogue:
+        raise ValueError("dialogue must contain at least one {text, voice} item")
+    total = 0
+    for i, item in enumerate(dialogue):
+        text, voice = (item.get("text") or "").strip(), (item.get("voice") or "").strip()
+        if not text:
+            raise ValueError(f"dialogue[{i}].text is required")
+        if not voice:
+            raise ValueError(f"dialogue[{i}].voice is required")
+        total += len(item["text"])
+    if total > ELEVENLABS_MAX_TEXT_CHARS:
+        raise ValueError(
+            f"the dialogue's combined text must be at most {ELEVENLABS_MAX_TEXT_CHARS} characters, got {total}"
+        )
+    if stability is not None and float(stability) not in ELEVENLABS_DIALOGUE_STABILITIES:
+        raise ValueError(
+            f"text-to-dialogue-v3 accepts stability {ELEVENLABS_DIALOGUE_STABILITIES} only, got {stability}"
+        )
+
+    input_payload: dict[str, Any] = {
+        "dialogue": [{"text": item["text"], "voice": item["voice"]} for item in dialogue]
+    }
+    if stability is not None:
+        input_payload["stability"] = stability
+    if language_code:
+        input_payload["language_code"] = language_code
+
+    payload: dict[str, Any] = {"model": ELEVENLABS_DIALOGUE, "input": input_payload}
+    if callback_url:
+        payload["callBackUrl"] = callback_url
+    return payload
+
+
+def voice_preview_url(voice_id: str) -> str:
+    return ELEVENLABS_VOICE_PREVIEW_URL.format(voice_id=voice_id)

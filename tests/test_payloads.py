@@ -2,6 +2,8 @@ import pytest
 
 
 from kie_cli.payloads import (
+    build_elevenlabs_dialogue_payload,
+    build_elevenlabs_tts_payload,
     build_gpt_image_2_5_payload,
     build_gpt_image_2_payload,
     build_grok_video_payload,
@@ -350,6 +352,105 @@ def test_gpt_image_2_5_slugs_route_to_the_market_endpoints():
     from kie_cli.payloads import GPT_IMAGE_2_5_MODELS
 
     for slug in GPT_IMAGE_2_5_MODELS:
+        route = route_for_model(slug)
+        assert route.route == "market"
+        assert route.status_endpoint == MARKET_STATUS_ENDPOINT
+
+
+# --- ElevenLabs ---------------------------------------------------------------
+
+def test_elevenlabs_tts_omits_what_was_not_asked_for():
+    payload = build_elevenlabs_tts_payload(text="Coffee you can chew.")
+
+    assert payload["model"] == "elevenlabs/text-to-speech-multilingual-v2"
+    assert payload["input"] == {"text": "Coffee you can chew.", "voice": "EkK5I93UQWFDigLMpZcX"}
+
+
+def test_elevenlabs_tts_carries_the_two_parameters_that_matter():
+    """`timestamps` returns WORD-LEVEL timings, the only way to sync burned-in
+    captions to the actual read. `previous_text`/`next_text` keep prosody
+    continuous when one script is split into per-shot segments."""
+    payload = build_elevenlabs_tts_payload(
+        text="Hawaiian coffee.", timestamps=True,
+        previous_text="Coffee you can chew.", next_text="Velvety cacao.",
+    )
+
+    assert payload["input"]["timestamps"] is True
+    assert payload["input"]["previous_text"] == "Coffee you can chew."
+    assert payload["input"]["next_text"] == "Velvety cacao."
+
+
+@pytest.mark.parametrize("kwargs,message", [
+    ({"text": ""}, "text is required"),
+    ({"text": "x" * 5001}, "at most 5000"),
+    ({"text": "x", "voice": " "}, "voice is required"),
+    ({"text": "x", "stability": 1.5}, "stability must be between"),
+    ({"text": "x", "similarity_boost": -0.1}, "similarity_boost must be between"),
+    ({"text": "x", "style": 2}, "style must be between"),
+    ({"text": "x", "speed": 0.5}, "speed must be between 0.7 and 1.2"),
+    ({"text": "x", "speed": 1.5}, "speed must be between 0.7 and 1.2"),
+])
+def test_elevenlabs_tts_validates_the_documented_ranges(kwargs, message):
+    with pytest.raises(ValueError, match=message):
+        build_elevenlabs_tts_payload(**kwargs)
+
+
+def test_elevenlabs_dialogue_takes_one_voice_per_line():
+    payload = build_elevenlabs_dialogue_payload(
+        dialogue=[{"text": "Coffee?", "voice": "A"}, {"text": "You can chew it.", "voice": "B"}],
+    )
+
+    assert payload["model"] == "elevenlabs/text-to-dialogue-v3"
+    assert payload["input"]["dialogue"] == [
+        {"text": "Coffee?", "voice": "A"}, {"text": "You can chew it.", "voice": "B"},
+    ]
+    assert "stability" not in payload["input"]
+
+
+def test_elevenlabs_dialogue_stability_is_three_values_not_a_range():
+    """v3 accepts 0, 0.5 or 1.0 only, unlike v2's continuous range, so 0.75
+    is a 422 rather than a rounded-down 0.5."""
+    assert build_elevenlabs_dialogue_payload(
+        dialogue=[{"text": "hi", "voice": "A"}], stability=1.0,
+    )["input"]["stability"] == 1.0
+
+    with pytest.raises(ValueError, match="stability"):
+        build_elevenlabs_dialogue_payload(dialogue=[{"text": "hi", "voice": "A"}], stability=0.75)
+
+
+def test_elevenlabs_dialogue_character_limit_is_the_sum_not_per_line():
+    with pytest.raises(ValueError, match="combined text"):
+        build_elevenlabs_dialogue_payload(dialogue=[
+            {"text": "x" * 3000, "voice": "A"}, {"text": "y" * 3000, "voice": "B"},
+        ])
+
+
+@pytest.mark.parametrize("dialogue,message", [
+    ([], "at least one"),
+    ([{"voice": "A"}], r"dialogue\[0\].text is required"),
+    ([{"text": "hi"}], r"dialogue\[0\].voice is required"),
+])
+def test_elevenlabs_dialogue_rejects_malformed_items(dialogue, message):
+    with pytest.raises(ValueError, match=message):
+        build_elevenlabs_dialogue_payload(dialogue=dialogue)
+
+
+def test_voice_previews_need_no_api_call():
+    """Previews are plain files at a predictable URL, so a preview UI needs
+    no backend."""
+    from kie_cli.payloads import voice_preview_url
+
+    assert voice_preview_url("N2lVS1w4EtoT3dr4eOWO") == (
+        "https://static.aiquickdraw.com/elevenlabs/voice/N2lVS1w4EtoT3dr4eOWO.mp3"
+    )
+
+
+def test_elevenlabs_slugs_route_to_the_market_endpoints():
+    """Without this a successful, BILLED submit would still raise on wait."""
+    from kie_cli.payloads import ELEVENLABS_MODELS
+    from kie_cli.routes import MARKET_STATUS_ENDPOINT, route_for_model
+
+    for slug in ELEVENLABS_MODELS:
         route = route_for_model(slug)
         assert route.route == "market"
         assert route.status_endpoint == MARKET_STATUS_ENDPOINT

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from .payloads import (
+    ELEVENLABS_MODELS,
     GPT_IMAGE_2_5_MODELS,
     SEEDANCE_MODELS,
     SUNO_LYRICS_MODEL,
@@ -31,7 +32,7 @@ MARKET_MODELS = {
     "gpt-image-2-image-to-image",
     "grok-imagine/text-to-video",
     "grok-imagine/image-to-video",
-} | SEEDANCE_MODELS | GPT_IMAGE_2_5_MODELS
+} | SEEDANCE_MODELS | GPT_IMAGE_2_5_MODELS | ELEVENLABS_MODELS
 
 VEO_MODELS = {
     "veo3",
