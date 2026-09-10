@@ -26,9 +26,15 @@ from .payloads import (
     SUNO_LYRICS_MODEL,
     SUNO_MUSIC_MODEL,
     SUNO_SOUNDS_MODEL,
+    ELEVENLABS_ALIASES,
+    ELEVENLABS_DEFAULT_VOICE,
+    ELEVENLABS_DIALOGUE,
+    ELEVENLABS_TTS,
     GPT_IMAGE_2_5_ALIASES,
     GPT_IMAGE_2_5_BACKGROUNDS,
     GPT_IMAGE_2_5_MODELS,
+    build_elevenlabs_dialogue_payload,
+    build_elevenlabs_tts_payload,
     build_gpt_image_2_5_payload,
     build_gpt_image_2_payload,
     build_grok_video_payload,
@@ -220,6 +226,39 @@ def build_parser() -> argparse.ArgumentParser:
     status.add_argument("--model", help="Model used to submit the job. Preferred over --kind.")
     status.add_argument("--json", action="store_true")
 
+    speech = subparsers.add_parser("speech", help="Submit an ElevenLabs text-to-speech or dialogue task.")
+    speech.add_argument(
+        "model", nargs="?", default="elevenlabs-tts", choices=sorted(ELEVENLABS_ALIASES),
+        help=(
+            "elevenlabs-tts / elevenlabs-v2 is multilingual-v2 (single voice, supports --timestamps); "
+            "elevenlabs-dialogue / elevenlabs-v3 is text-to-dialogue-v3 (multi-speaker, NO timestamps)"
+        ),
+    )
+    add_prompt_args(speech)
+    speech.add_argument("--voice", default=ELEVENLABS_DEFAULT_VOICE, help="voice id (preferred) or preset name")
+    speech.add_argument("--stability", type=float)
+    speech.add_argument("--similarity-boost", dest="similarity_boost", type=float)
+    speech.add_argument("--style", dest="voice_style", type=float)
+    speech.add_argument("--speed", type=float, help="0.7-1.2")
+    speech.add_argument(
+        "--timestamps", action="store_true",
+        help="return WORD-LEVEL timings; multilingual-v2 only, and the only way to sync captions to the read",
+    )
+    speech.add_argument("--previous-text", dest="previous_text", help="the copy just before this segment, for continuous prosody")
+    speech.add_argument("--next-text", dest="next_text", help="the copy just after this segment")
+    speech.add_argument("--language-code", dest="language_code", help="ISO 639-1")
+    speech.add_argument(
+        "--dialogue", help="text-to-dialogue-v3 only: JSON array of {text, voice} items (or @path to a JSON file)",
+    )
+    speech.add_argument("--callback-url")
+    speech.add_argument("--save-job")
+    speech.add_argument("--dry-run", action="store_true")
+    speech.add_argument("--json", action="store_true")
+
+    voices = subparsers.add_parser("voices", help="Print the ElevenLabs voice preview URL for a voice id.")
+    voices.add_argument("voice_id")
+    voices.add_argument("--json", action="store_true")
+
     wait = subparsers.add_parser("wait", help="Poll an async KIE job until completion.")
     wait.add_argument("job_id", nargs="?")
     wait.add_argument("--model")
@@ -251,6 +290,10 @@ def dispatch(args: argparse.Namespace) -> dict[str, Any]:
         return command_upload(args)
     if args.command == "image":
         return command_image(args)
+    if args.command == "speech":
+        return command_speech(args)
+    if args.command == "voices":
+        return command_voices(args)
     if args.command == "video":
         return command_video(args)
     if args.command == "llm":
@@ -341,6 +384,50 @@ def command_image(args: argparse.Namespace) -> dict[str, Any]:
     result["resolvedMedia"] = [asdict(item) for item in resolved]
     maybe_save_job(args, result=result, payload=payload, resolved_media=result["resolvedMedia"], raw=response)
     return result
+
+
+def command_speech(args: argparse.Namespace) -> dict[str, Any]:
+    model = ELEVENLABS_ALIASES[args.model]
+    config = load_config()
+
+    if model == ELEVENLABS_DIALOGUE:
+        if not args.dialogue:
+            raise ValueError("text-to-dialogue-v3 needs --dialogue (a JSON array of {text, voice} items)")
+        raw = args.dialogue
+        if raw.startswith("@"):
+            raw = Path(raw[1:]).read_text()
+        payload = build_elevenlabs_dialogue_payload(
+            dialogue=json.loads(raw), stability=args.stability,
+            language_code=args.language_code, callback_url=args.callback_url,
+        )
+    else:
+        payload = build_elevenlabs_tts_payload(
+            text=read_prompt(args), voice=args.voice, stability=args.stability,
+            similarity_boost=args.similarity_boost, style=args.voice_style, speed=args.speed,
+            timestamps=args.timestamps or None, previous_text=args.previous_text,
+            next_text=args.next_text, language_code=args.language_code,
+            callback_url=args.callback_url,
+        )
+
+    if args.dry_run:
+        return dry_run_result(model=model, payload=payload, resolved_media=[], kind="market")
+
+    response = KieClient(config).create_market_task(payload)
+    result = normalize_submit(response, model=model)
+    maybe_save_job(args, result=result, payload=payload, resolved_media=[], raw=response)
+    return result
+
+
+def command_voices(args: argparse.Namespace) -> dict[str, Any]:
+    """The preview URL for a voice id.
+
+    Previews are plain files at a predictable URL, so listening to a voice
+    needs no API call and no backend -- just this URL in a browser or an
+    `<audio>` tag.
+    """
+    from .payloads import voice_preview_url
+
+    return {"ok": True, "voiceId": args.voice_id, "previewUrl": voice_preview_url(args.voice_id)}
 
 
 def command_video(args: argparse.Namespace) -> dict[str, Any]:

@@ -22,8 +22,14 @@ from .payloads import (
     SUNO_LYRICS_MODEL,
     SUNO_MUSIC_MODEL,
     SUNO_SOUNDS_MODEL,
+    ELEVENLABS_ALIASES,
+    ELEVENLABS_DEFAULT_VOICE,
+    ELEVENLABS_DIALOGUE,
+    ELEVENLABS_TTS,
     GPT_IMAGE_2_5_ALIASES,
     GPT_IMAGE_2_5_MODELS,
+    build_elevenlabs_dialogue_payload,
+    build_elevenlabs_tts_payload,
     build_gpt_image_2_5_payload,
     build_gpt_image_2_payload,
     build_grok_video_payload,
@@ -77,6 +83,7 @@ def create_mcp_server() -> Any:
     server.tool()(kie_upload_file)
     server.tool()(kie_generate_image)
     server.tool()(kie_generate_video)
+    server.tool()(kie_generate_speech)
     server.tool()(kie_chat_completion)
     server.tool()(kie_suno_music)
     server.tool()(kie_suno_lyrics)
@@ -209,6 +216,64 @@ def kie_generate_image(
         resolved_media=[asdict(item) for item in resolved],
         raw=response,
     )
+
+
+def kie_generate_speech(
+    text: str | None = None,
+    model: str = "elevenlabs-tts",
+    voice: str = ELEVENLABS_DEFAULT_VOICE,
+    stability: float | None = None,
+    similarity_boost: float | None = None,
+    style: float | None = None,
+    speed: float | None = None,
+    timestamps: bool = False,
+    previous_text: str | None = None,
+    next_text: str | None = None,
+    language_code: str | None = None,
+    dialogue: list[dict] | None = None,
+    callback_url: str | None = None,
+    save_job: str | None = None,
+    dry_run: bool = True,
+) -> dict[str, Any]:
+    """Submit or dry-run an ElevenLabs speech task.
+
+    `elevenlabs-tts` (multilingual-v2) takes one `text` and one `voice` and
+    supports `timestamps`, which returns WORD-LEVEL timings -- the only way to
+    sync burned-in captions to the actual read. `elevenlabs-dialogue`
+    (text-to-dialogue-v3) takes a `dialogue` array of {text, voice} for
+    multiple speakers but has NO timestamps, so choosing it means accepting
+    estimated caption timing.
+
+    `previous_text`/`next_text` keep prosody continuous when one script is
+    split into per-shot segments.
+    """
+    resolved = ELEVENLABS_ALIASES.get(model)
+    if resolved is None:
+        raise ValueError(f"Unsupported speech model {model!r}; use one of {sorted(ELEVENLABS_ALIASES)}")
+    config = load_config()
+
+    if resolved == ELEVENLABS_DIALOGUE:
+        if not dialogue:
+            raise ValueError("text-to-dialogue-v3 needs `dialogue`, a list of {text, voice} items")
+        payload = build_elevenlabs_dialogue_payload(
+            dialogue=dialogue, stability=stability, language_code=language_code,
+            callback_url=callback_url,
+        )
+    else:
+        if not text:
+            raise ValueError("`text` is required for text-to-speech")
+        payload = build_elevenlabs_tts_payload(
+            text=text, voice=voice, stability=stability, similarity_boost=similarity_boost,
+            style=style, speed=speed, timestamps=timestamps or None, previous_text=previous_text,
+            next_text=next_text, language_code=language_code, callback_url=callback_url,
+        )
+
+    if dry_run:
+        return _dry_run_result("market", resolved, payload, [])
+
+    response = KieClient(config).create_market_task(payload)
+    result = normalize_submit(response, model=resolved)
+    return _with_job_record(result, save_job=save_job, payload=payload, resolved_media=[], raw=response)
 
 
 def kie_generate_video(
