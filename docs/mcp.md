@@ -240,12 +240,13 @@ Parameters:
 
 | Parameter | Type | Required | Default | Notes |
 |---|---|---:|---|---|
-| `model` | string | Yes | None | `nano-banana-pro` or `gpt-image-2`. |
+| `model` | string | Yes | None | `nano-banana-pro`, `gpt-image-2`, a `gpt-image-2-5*` alias, or a full GPT Image 2.5 slug. |
 | `prompt` | string | Yes | None | Image prompt. |
 | `image` | list[string]/null | No | null | Local paths or URLs. |
-| `aspect_ratio` | string/null | No | model default | `1:1` for Nano Banana, `auto` for GPT Image 2. |
-| `resolution` | string | No | `1K` | Provider-specific resolution. |
+| `aspect_ratio` | string/null | No | model default | `1:1` for Nano Banana, `auto` for GPT Image 2 and 2.5. GPT Image 2.5 validates it against the enum for the mode in play. |
+| `resolution` | string | No | `1K` | Provider-specific resolution. GPT Image 2.5 accepts `1K`, `2K` or `4K`. |
 | `output_format` | string | No | `png` | `png` or `jpg`; relevant to Nano Banana. |
+| `background` | string/null | No | null | GPT Image 2.5 only: `transparent`, `opaque` or `auto`. Omitted from the payload unless given. |
 | `callback_url` | string/null | No | null | Sent as KIE `callBackUrl`. |
 | `upload_path` | string | No | `kie-mcp/images` | Upload path for local image inputs. |
 | `save_job` | string/null | No | null | Local job record path. |
@@ -255,6 +256,8 @@ Routing:
 
 - `gpt-image-2` without images -> `gpt-image-2-text-to-image`
 - `gpt-image-2` with images -> `gpt-image-2-image-to-image`
+- `gpt-image-2-5` -> the Sunburst tier, text-to-image or image-to-image by the same rule
+- `gpt-image-2-5-flare` / `gpt-image-2-5-sunburst` -> that tier, mode by the same rule
 - `nano-banana-pro` -> `nano-banana-pro`
 
 Safe first call:

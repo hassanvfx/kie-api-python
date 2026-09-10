@@ -26,6 +26,10 @@ from .payloads import (
     SUNO_LYRICS_MODEL,
     SUNO_MUSIC_MODEL,
     SUNO_SOUNDS_MODEL,
+    GPT_IMAGE_2_5_ALIASES,
+    GPT_IMAGE_2_5_BACKGROUNDS,
+    GPT_IMAGE_2_5_MODELS,
+    build_gpt_image_2_5_payload,
     build_gpt_image_2_payload,
     build_grok_video_payload,
     build_nano_banana_pro_payload,
@@ -42,6 +46,13 @@ from .status import (
     normalize_suno_music_status,
     normalize_veo_status,
 )
+
+IMAGE_MODEL_CHOICES = [
+    "nano-banana-pro",
+    "gpt-image-2",
+    *GPT_IMAGE_2_5_ALIASES,
+    *sorted(GPT_IMAGE_2_5_MODELS),
+]
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -86,13 +97,24 @@ def build_parser() -> argparse.ArgumentParser:
     image = subparsers.add_parser("image", help="Submit an image generation task.")
     image.add_argument(
         "model",
-        choices=["nano-banana-pro", "gpt-image-2"],
-        help="Focused image model alias.",
+        choices=IMAGE_MODEL_CHOICES,
+        help=(
+            "Image model alias or full slug. `gpt-image-2` and the "
+            "`gpt-image-2-5*` aliases pick text-to-image or image-to-image "
+            "from whether --image was given; a full GPT Image 2.5 slug "
+            "forces the mode."
+        ),
     )
     add_prompt_args(image)
     add_image_args(image)
     image.add_argument("--aspect-ratio", default=None)
     image.add_argument("--resolution", default="1K")
+    image.add_argument(
+        "--background",
+        default=None,
+        choices=list(GPT_IMAGE_2_5_BACKGROUNDS),
+        help="GPT Image 2.5 only: background handling. Omitted unless given.",
+    )
     image.add_argument("--output-format", default="png", choices=["png", "jpg"])
     image.add_argument("--callback-url")
     image.add_argument("--upload-path", default="kie-cli/images")
@@ -290,6 +312,17 @@ def command_image(args: argparse.Namespace) -> dict[str, Any]:
             callback_url=args.callback_url,
         )
         model = "nano-banana-pro"
+    elif args.model in GPT_IMAGE_2_5_ALIASES or args.model in GPT_IMAGE_2_5_MODELS:
+        payload = build_gpt_image_2_5_payload(
+            prompt=prompt,
+            model=args.model,
+            image_urls=image_urls,
+            aspect_ratio=args.aspect_ratio or "auto",
+            resolution=args.resolution,
+            background=args.background,
+            callback_url=args.callback_url,
+        )
+        model = payload["model"]
     else:
         payload = build_gpt_image_2_payload(
             prompt=prompt,

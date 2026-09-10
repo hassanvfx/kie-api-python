@@ -171,17 +171,22 @@ Models:
 | `nano-banana-pro` | `nano-banana-pro` | Supports prompt plus optional reference images. |
 | `gpt-image-2` | `gpt-image-2-text-to-image` | Used when no images are provided. |
 | `gpt-image-2` | `gpt-image-2-image-to-image` | Used when one or more images are provided. |
+| `gpt-image-2-5` | `gpt-image-2-5-sunburst-text-to-image` / `-image-to-image` | GPT Image 2.5. Defaults to the Sunburst tier; mode picked from whether images are provided. |
+| `gpt-image-2-5-sunburst` | `gpt-image-2-5-sunburst-text-to-image` / `-image-to-image` | Highest-quality GPT Image 2.5 tier. Best for finals and reference-driven editing. |
+| `gpt-image-2-5-flare` | `gpt-image-2-5-flare-text-to-image` / `-image-to-image` | Faster, cheaper GPT Image 2.5 tier. Best for drafts and bulk exploration. |
+| `gpt-image-2-5-<tier>-<mode>-to-image` | itself | A full slug forces the mode and errors if the image inputs do not match it. |
 
 Parameters:
 
 | Parameter | Required | Default | Notes |
 |---|---:|---|---|
-| `MODEL` | Yes | None | `nano-banana-pro` or `gpt-image-2`. |
+| `MODEL` | Yes | None | `nano-banana-pro`, `gpt-image-2`, a `gpt-image-2-5*` alias, or a full GPT Image 2.5 slug. |
 | `--prompt` | Yes* | None | Inline prompt. Mutually exclusive with `--prompt-file`. |
 | `--prompt-file` | Yes* | None | UTF-8 text file prompt. Mutually exclusive with `--prompt`. |
 | `--image` | No | repeatable empty list | Local file or URL. Can be repeated. |
-| `--aspect-ratio` | No | `1:1` for `nano-banana-pro`, `auto` for `gpt-image-2` | Provider-specific aspect ratio string. |
-| `--resolution` | No | `1K` | Provider-specific resolution string. |
+| `--aspect-ratio` | No | `1:1` for `nano-banana-pro`, `auto` otherwise | Provider-specific aspect ratio string. GPT Image 2.5 validates it against the enum for the mode in play. |
+| `--resolution` | No | `1K` | Provider-specific resolution string. GPT Image 2.5 accepts `1K`, `2K` or `4K`. |
+| `--background` | No | None | GPT Image 2.5 only: `transparent`, `opaque` or `auto`. Omitted from the payload unless given. |
 | `--output-format` | No | `png` | `png` or `jpg`. Used by `nano-banana-pro`. |
 | `--callback-url` | No | None | Provider callback URL, sent as `callBackUrl`. |
 | `--upload-path` | No | `kie-cli/images` | Upload path for local images. |
@@ -193,6 +198,16 @@ Examples:
 
 ```bash
 kie-cli image gpt-image-2 --prompt "A cinematic night city poster" --json
+
+# GPT Image 2.5, Sunburst tier, 2K vertical
+kie-cli image gpt-image-2-5 --prompt "A cinematic night city poster" \
+  --aspect-ratio 9:16 --resolution 2K --json
+
+# Reference-driven edit: up to 16 input images
+kie-cli image gpt-image-2-5-sunburst \
+  --prompt-file ./prompt.txt \
+  --image ./canon-sheet.png --image ./final-frame.png \
+  --aspect-ratio 2:3 --resolution 2K --json
 
 kie-cli image gpt-image-2 \
   --prompt-file ./prompt.txt \
