@@ -1,4 +1,8 @@
+import pytest
+
+
 from kie_cli.payloads import (
+    build_gpt_image_2_5_payload,
     build_gpt_image_2_payload,
     build_grok_video_payload,
     build_nano_banana_pro_payload,
@@ -135,6 +139,51 @@ def test_seedance_1_5_payload_uses_input_urls_and_string_duration():
     assert payload["input"]["fixed_lens"] is True
 
 
+def test_seedance_2_5_payload_supports_extended_reference_images():
+    payload = build_seedance_payload(
+        prompt="a 30-second cinematic product journey",
+        model="seedance-2.5",
+        reference_image_urls=[f"https://example.com/ref{i}.png" for i in range(30)],
+        duration=30,
+        resolution="1080p",
+        aspect_ratio="9:16",
+        generate_audio=True,
+    )
+
+    assert payload["model"] == "bytedance/seedance-2-5"
+    assert len(payload["input"]["reference_image_urls"]) == 30
+    assert payload["input"]["duration"] == 30
+    assert payload["input"]["resolution"] == "1080p"
+    assert payload["input"]["aspect_ratio"] == "9:16"
+    assert payload["input"]["generate_audio"] is True
+
+
+def test_seedance_2_5_rejects_more_than_30_reference_images():
+    try:
+        build_seedance_payload(
+            prompt="too many references",
+            model="seedance-2.5",
+            reference_image_urls=[f"https://example.com/ref{i}.png" for i in range(31)],
+        )
+    except ValueError as exc:
+        assert "30 reference images" in str(exc)
+    else:
+        raise AssertionError("Expected more than 30 reference images to fail for seedance-2.5")
+
+
+def test_seedance_2_fast_still_rejects_more_than_9_reference_images():
+    try:
+        build_seedance_payload(
+            prompt="too many references",
+            model="seedance-2-fast",
+            reference_image_urls=[f"https://example.com/ref{i}.png" for i in range(10)],
+        )
+    except ValueError as exc:
+        assert "9 reference images" in str(exc)
+    else:
+        raise AssertionError("Expected more than 9 reference images to fail for seedance-2-fast")
+
+
 def test_seedance_2_rejects_mixed_frame_and_reference_inputs():
     try:
         build_seedance_payload(
@@ -199,3 +248,108 @@ def test_suno_sounds_payload_with_options():
         "soundKey": "Am",
         "callBackUrl": "https://example.com/callback",
     }
+
+
+def test_gpt_image_2_5_family_alias_defaults_to_sunburst_text_to_image():
+    payload = build_gpt_image_2_5_payload(prompt="a poster")
+
+    assert payload["model"] == "gpt-image-2-5-sunburst-text-to-image"
+    assert payload["input"] == {"prompt": "a poster", "aspect_ratio": "auto"}
+
+
+def test_gpt_image_2_5_alias_switches_to_image_to_image_when_images_given():
+    payload = build_gpt_image_2_5_payload(
+        prompt="edit this",
+        image_urls=["https://example.com/in.png"],
+        aspect_ratio="9:16",
+        resolution="2K",
+        background="opaque",
+    )
+
+    assert payload["model"] == "gpt-image-2-5-sunburst-image-to-image"
+    assert payload["input"]["input_urls"] == ["https://example.com/in.png"]
+    assert payload["input"]["resolution"] == "2K"
+    assert payload["input"]["background"] == "opaque"
+
+
+def test_gpt_image_2_5_flare_variant_alias_is_honored():
+    payload = build_gpt_image_2_5_payload(prompt="draft", model="gpt-image-2-5-flare")
+
+    assert payload["model"] == "gpt-image-2-5-flare-text-to-image"
+
+
+def test_gpt_image_2_5_omits_resolution_and_background_when_not_requested():
+    payload = build_gpt_image_2_5_payload(prompt="a poster", model="gpt-image-2-5-sunburst")
+
+    assert "resolution" not in payload["input"]
+    assert "background" not in payload["input"]
+
+
+def test_gpt_image_2_5_full_slug_forces_the_mode_and_rejects_a_mismatch():
+    payload = build_gpt_image_2_5_payload(
+        prompt="edit",
+        model="gpt-image-2-5-flare-image-to-image",
+        image_urls=["https://example.com/in.png"],
+    )
+    assert payload["model"] == "gpt-image-2-5-flare-image-to-image"
+
+    with pytest.raises(ValueError, match="image-to-image model but no images"):
+        build_gpt_image_2_5_payload(prompt="x", model="gpt-image-2-5-flare-image-to-image")
+
+    with pytest.raises(ValueError, match="text-to-image model but images"):
+        build_gpt_image_2_5_payload(
+            prompt="x",
+            model="gpt-image-2-5-sunburst-text-to-image",
+            image_urls=["https://example.com/in.png"],
+        )
+
+
+def test_gpt_image_2_5_rejects_more_than_sixteen_input_images():
+    with pytest.raises(ValueError, match="at most 16"):
+        build_gpt_image_2_5_payload(
+            prompt="edit",
+            image_urls=[f"https://example.com/{n}.png" for n in range(17)],
+        )
+
+
+def test_gpt_image_2_5_aspect_ratio_enums_differ_per_mode():
+    # 5:4 is image-to-image only; 9:8 is text-to-image only.
+    assert build_gpt_image_2_5_payload(
+        prompt="edit", image_urls=["https://example.com/in.png"], aspect_ratio="5:4"
+    )["input"]["aspect_ratio"] == "5:4"
+    with pytest.raises(ValueError, match="Unsupported aspect_ratio"):
+        build_gpt_image_2_5_payload(prompt="draw", aspect_ratio="5:4")
+
+    assert build_gpt_image_2_5_payload(prompt="draw", aspect_ratio="9:8")["input"]["aspect_ratio"] == "9:8"
+    with pytest.raises(ValueError, match="Unsupported aspect_ratio"):
+        build_gpt_image_2_5_payload(
+            prompt="edit", image_urls=["https://example.com/in.png"], aspect_ratio="9:8"
+        )
+
+
+def test_gpt_image_2_5_rejects_high_resolution_on_a_one_k_only_aspect_ratio():
+    with pytest.raises(ValueError, match="supports 1K only"):
+        build_gpt_image_2_5_payload(prompt="draw", aspect_ratio="27:16", resolution="4K")
+
+    assert build_gpt_image_2_5_payload(
+        prompt="draw", aspect_ratio="27:16", resolution="1K"
+    )["input"]["resolution"] == "1K"
+
+
+def test_gpt_image_2_5_rejects_unknown_resolution_background_and_variant():
+    with pytest.raises(ValueError, match="Unsupported resolution"):
+        build_gpt_image_2_5_payload(prompt="x", resolution="8K")
+    with pytest.raises(ValueError, match="Unsupported background"):
+        build_gpt_image_2_5_payload(prompt="x", background="blurred")
+    with pytest.raises(ValueError, match="Unsupported GPT Image 2.5 variant"):
+        build_gpt_image_2_5_payload(prompt="x", model="gpt-image-2-5-supernova")
+
+
+def test_gpt_image_2_5_slugs_route_to_the_market_endpoints():
+    from kie_cli.routes import MARKET_STATUS_ENDPOINT, route_for_model
+    from kie_cli.payloads import GPT_IMAGE_2_5_MODELS
+
+    for slug in GPT_IMAGE_2_5_MODELS:
+        route = route_for_model(slug)
+        assert route.route == "market"
+        assert route.status_endpoint == MARKET_STATUS_ENDPOINT

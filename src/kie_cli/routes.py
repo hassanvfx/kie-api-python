@@ -5,7 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-from .payloads import SEEDANCE_MODELS, SUNO_LYRICS_MODEL, SUNO_MUSIC_MODEL, SUNO_SOUNDS_MODEL
+from .payloads import (
+    GPT_IMAGE_2_5_MODELS,
+    SEEDANCE_MODELS,
+    SUNO_LYRICS_MODEL,
+    SUNO_MUSIC_MODEL,
+    SUNO_SOUNDS_MODEL,
+)
 
 JobRoute = Literal["market", "veo", "suno_music", "suno_lyrics"]
 
@@ -25,7 +31,7 @@ MARKET_MODELS = {
     "gpt-image-2-image-to-image",
     "grok-imagine/text-to-video",
     "grok-imagine/image-to-video",
-} | SEEDANCE_MODELS
+} | SEEDANCE_MODELS | GPT_IMAGE_2_5_MODELS
 
 VEO_MODELS = {
     "veo3",

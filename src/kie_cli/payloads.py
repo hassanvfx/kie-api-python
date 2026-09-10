@@ -13,15 +13,25 @@ VEO_MODELS = {"veo3", "veo3_fast", "veo3_lite"}
 SEEDANCE_2_FAST = "bytedance/seedance-2-fast"
 SEEDANCE_2 = "bytedance/seedance-2"
 SEEDANCE_1_5_PRO = "bytedance/seedance-1.5-pro"
-SEEDANCE_MODELS = {SEEDANCE_2_FAST, SEEDANCE_2, SEEDANCE_1_5_PRO}
+SEEDANCE_2_5 = "bytedance/seedance-2-5"
+SEEDANCE_MODELS = {SEEDANCE_2_FAST, SEEDANCE_2, SEEDANCE_1_5_PRO, SEEDANCE_2_5}
 SEEDANCE_MODEL_ALIASES = {
     "seedance-2-fast": SEEDANCE_2_FAST,
     "seedance-2": SEEDANCE_2,
     "seedance-1.5-pro": SEEDANCE_1_5_PRO,
+    "seedance-2.5": SEEDANCE_2_5,
     SEEDANCE_2_FAST: SEEDANCE_2_FAST,
     SEEDANCE_2: SEEDANCE_2,
     SEEDANCE_1_5_PRO: SEEDANCE_1_5_PRO,
+    SEEDANCE_2_5: SEEDANCE_2_5,
 }
+SEEDANCE_2X_REFERENCE_IMAGE_CAP = {SEEDANCE_2_5: 30}
+"""Seedance 2.5 accepts up to 30 combined reference_image_urls/first-last-frame
+images (docs.kie.ai/market/bytedance/seedance-2-5), vs the 9-image cap that
+applies to seedance-2/seedance-2-fast -- everything else about the "2.x"
+payload shape (duration is never range-validated client-side here, matching
+this module's existing posture of leaving that to the caller; resolution/
+aspect_ratio are unrestricted strings) is identical across all three."""
 SUNO_MUSIC_MODEL = "suno-music"
 SUNO_LYRICS_MODEL = "suno-lyrics"
 SUNO_SOUNDS_MODEL = "suno-sounds"
@@ -216,8 +226,9 @@ def build_seedance_payload(
     has_reference_inputs = bool(reference_images or reference_videos or reference_audios)
     if has_frame_inputs and has_reference_inputs:
         raise ValueError("Seedance 2.x frame inputs and reference media inputs are mutually exclusive.")
-    if len(reference_images) > 9:
-        raise ValueError("Seedance 2.x supports at most 9 reference images.")
+    max_reference_images = SEEDANCE_2X_REFERENCE_IMAGE_CAP.get(provider_model, 9)
+    if len(reference_images) > max_reference_images:
+        raise ValueError(f"Seedance 2.x supports at most {max_reference_images} reference images.")
     if len(reference_videos) > 3:
         raise ValueError("Seedance 2.x supports at most 3 reference videos.")
     if len(reference_audios) > 3:
@@ -315,6 +326,165 @@ def build_suno_sounds_payload(
         payload["soundTempo"] = sound_tempo
     if sound_key:
         payload["soundKey"] = sound_key
+    if callback_url:
+        payload["callBackUrl"] = callback_url
+    return payload
+
+
+GPT_IMAGE_2_5_FLARE_TEXT = "gpt-image-2-5-flare-text-to-image"
+GPT_IMAGE_2_5_FLARE_IMAGE = "gpt-image-2-5-flare-image-to-image"
+GPT_IMAGE_2_5_SUNBURST_TEXT = "gpt-image-2-5-sunburst-text-to-image"
+GPT_IMAGE_2_5_SUNBURST_IMAGE = "gpt-image-2-5-sunburst-image-to-image"
+GPT_IMAGE_2_5_MODELS = {
+    GPT_IMAGE_2_5_FLARE_TEXT,
+    GPT_IMAGE_2_5_FLARE_IMAGE,
+    GPT_IMAGE_2_5_SUNBURST_TEXT,
+    GPT_IMAGE_2_5_SUNBURST_IMAGE,
+}
+GPT_IMAGE_2_5_VARIANTS = {
+    # variant -> (text-to-image slug, image-to-image slug)
+    "flare": (GPT_IMAGE_2_5_FLARE_TEXT, GPT_IMAGE_2_5_FLARE_IMAGE),
+    "sunburst": (GPT_IMAGE_2_5_SUNBURST_TEXT, GPT_IMAGE_2_5_SUNBURST_IMAGE),
+}
+GPT_IMAGE_2_5_ALIASES = ("gpt-image-2-5", "gpt-image-2-5-flare", "gpt-image-2-5-sunburst")
+"""Family and variant aliases. Like `gpt-image-2`, each resolves to the
+text-to-image or image-to-image slug depending on whether images were
+supplied; the bare family alias resolves to the default variant."""
+
+GPT_IMAGE_2_5_DEFAULT_VARIANT = "sunburst"
+"""Sunburst is OpenAI's most capable GPT Image 2.5 tier for generation and
+editing; Flare is the faster, cheaper default OpenAI recommends for bulk
+exploration. Callers doing reference-driven or final-quality work want
+Sunburst, so it is this module's default and Flare is the opt-in."""
+
+GPT_IMAGE_2_5_MAX_INPUT_IMAGES = 16
+"""docs.kie.ai/market/gpt/gpt-image-2-5-sunburst-image-to-image: `input_urls`
+accepts at most 16 image URLs."""
+
+GPT_IMAGE_2_5_BACKGROUNDS = ("transparent", "opaque", "auto")
+GPT_IMAGE_2_5_RESOLUTIONS = ("1K", "2K", "4K")
+GPT_IMAGE_2_5_TEXT_ASPECT_RATIOS = (
+    "auto", "1:1", "3:2", "2:3", "4:3", "3:4", "16:9", "9:16",
+    "21:9", "27:16", "16:27", "9:8", "8:9",
+)
+GPT_IMAGE_2_5_IMAGE_ASPECT_RATIOS = (
+    "auto", "1:1", "3:2", "2:3", "4:3", "3:4", "5:4", "4:5",
+    "16:9", "9:16", "2:1", "1:2", "3:1", "1:3", "21:9", "9:21",
+)
+"""The two modes publish DIFFERENT aspect-ratio enums: text-to-image adds the
+wide/tall 27:16, 16:27, 9:8 and 8:9 ratios, image-to-image adds 5:4, 4:5,
+2:1, 1:2, 3:1, 1:3 and 9:21. Validating per mode turns a 422 round-trip into
+a local error naming the values that actually work for the mode in play."""
+
+GPT_IMAGE_2_5_ONE_K_ONLY_ASPECT_RATIOS = ("27:16", "16:27", "9:8", "8:9")
+"""Documented on both text-to-image pages: "The 27:16, 16:27, 9:8 and 8:9
+aspect ratios support 1K only"."""
+
+
+def resolve_gpt_image_2_5_model(variant_or_slug: str, *, has_images: bool) -> str:
+    """Map a caller's model string onto one of the four real slugs.
+
+    Accepts a family alias (`gpt-image-2-5`), a variant alias
+    (`gpt-image-2-5-flare`, `gpt-image-2-5-sunburst`) -- both of which pick
+    text-to-image or image-to-image from whether images were supplied, the
+    same way `build_gpt_image_2_payload` already does for GPT Image 2 -- or a
+    fully qualified slug, which forces the mode explicitly and is checked for
+    consistency with the inputs.
+    """
+    if variant_or_slug in GPT_IMAGE_2_5_MODELS:
+        wants_images = variant_or_slug.endswith("-image-to-image")
+        if wants_images and not has_images:
+            raise ValueError(
+                f"{variant_or_slug} is an image-to-image model but no images were supplied."
+            )
+        if not wants_images and has_images:
+            raise ValueError(
+                f"{variant_or_slug} is a text-to-image model but images were supplied. "
+                f"Use the image-to-image slug or a variant alias."
+            )
+        return variant_or_slug
+
+    variant = variant_or_slug
+    if variant in ("gpt-image-2-5", "gpt-image-2.5"):
+        variant = GPT_IMAGE_2_5_DEFAULT_VARIANT
+    for prefix in ("gpt-image-2-5-", "gpt-image-2.5-"):
+        if variant.startswith(prefix):
+            variant = variant[len(prefix):]
+            break
+    if variant not in GPT_IMAGE_2_5_VARIANTS:
+        raise ValueError(
+            f"Unsupported GPT Image 2.5 variant: {variant_or_slug!r}. "
+            f"Use one of: gpt-image-2-5, "
+            f"{', '.join(f'gpt-image-2-5-{name}' for name in sorted(GPT_IMAGE_2_5_VARIANTS))}, "
+            f"or a full slug ({', '.join(sorted(GPT_IMAGE_2_5_MODELS))})."
+        )
+    text_slug, image_slug = GPT_IMAGE_2_5_VARIANTS[variant]
+    return image_slug if has_images else text_slug
+
+
+def build_gpt_image_2_5_payload(
+    *,
+    prompt: str,
+    model: str = "gpt-image-2-5",
+    image_urls: list[str] | None = None,
+    aspect_ratio: str = "auto",
+    resolution: str | None = None,
+    background: str | None = None,
+    callback_url: str | None = None,
+) -> dict[str, Any]:
+    """Build a GPT Image 2.5 (Flare / Sunburst) market-job payload.
+
+    The `input` block is shaped exactly like GPT Image 2's -- prompt,
+    aspect_ratio, resolution, and input_urls for the image-to-image mode --
+    plus the new optional `background`. `resolution` and `background` are
+    omitted entirely when not given, so the model's own default applies
+    rather than a default this client invents.
+    """
+    image_urls = image_urls or []
+    has_images = bool(image_urls)
+    resolved_model = resolve_gpt_image_2_5_model(model, has_images=has_images)
+
+    if len(image_urls) > GPT_IMAGE_2_5_MAX_INPUT_IMAGES:
+        raise ValueError(
+            f"{resolved_model} accepts at most {GPT_IMAGE_2_5_MAX_INPUT_IMAGES} "
+            f"input images, got {len(image_urls)}."
+        )
+
+    allowed_aspect = (
+        GPT_IMAGE_2_5_IMAGE_ASPECT_RATIOS if has_images else GPT_IMAGE_2_5_TEXT_ASPECT_RATIOS
+    )
+    if aspect_ratio not in allowed_aspect:
+        raise ValueError(
+            f"Unsupported aspect_ratio {aspect_ratio!r} for {resolved_model}. "
+            f"Supported: {', '.join(allowed_aspect)}."
+        )
+    if resolution is not None and resolution not in GPT_IMAGE_2_5_RESOLUTIONS:
+        raise ValueError(
+            f"Unsupported resolution {resolution!r}. "
+            f"Supported: {', '.join(GPT_IMAGE_2_5_RESOLUTIONS)}."
+        )
+    if (
+        resolution not in (None, "1K")
+        and aspect_ratio in GPT_IMAGE_2_5_ONE_K_ONLY_ASPECT_RATIOS
+    ):
+        raise ValueError(
+            f"Aspect ratio {aspect_ratio!r} supports 1K only, got resolution {resolution!r}."
+        )
+    if background is not None and background not in GPT_IMAGE_2_5_BACKGROUNDS:
+        raise ValueError(
+            f"Unsupported background {background!r}. "
+            f"Supported: {', '.join(GPT_IMAGE_2_5_BACKGROUNDS)}."
+        )
+
+    input_payload: dict[str, Any] = {"prompt": prompt, "aspect_ratio": aspect_ratio}
+    if has_images:
+        input_payload["input_urls"] = image_urls
+    if resolution is not None:
+        input_payload["resolution"] = resolution
+    if background is not None:
+        input_payload["background"] = background
+
+    payload: dict[str, Any] = {"model": resolved_model, "input": input_payload}
     if callback_url:
         payload["callBackUrl"] = callback_url
     return payload

@@ -22,6 +22,9 @@ from .payloads import (
     SUNO_LYRICS_MODEL,
     SUNO_MUSIC_MODEL,
     SUNO_SOUNDS_MODEL,
+    GPT_IMAGE_2_5_ALIASES,
+    GPT_IMAGE_2_5_MODELS,
+    build_gpt_image_2_5_payload,
     build_gpt_image_2_payload,
     build_grok_video_payload,
     build_nano_banana_pro_payload,
@@ -138,6 +141,7 @@ def kie_generate_image(
     aspect_ratio: str | None = None,
     resolution: str = "1K",
     output_format: str = "png",
+    background: str | None = None,
     callback_url: str | None = None,
     upload_path: str = "kie-mcp/images",
     save_job: str | None = None,
@@ -175,8 +179,23 @@ def kie_generate_image(
             callback_url=callback_url,
         )
         resolved_model = payload["model"]
+    elif model in GPT_IMAGE_2_5_ALIASES or model in GPT_IMAGE_2_5_MODELS:
+        payload = build_gpt_image_2_5_payload(
+            prompt=prompt,
+            model=model,
+            image_urls=image_urls,
+            aspect_ratio=aspect_ratio or "auto",
+            resolution=resolution,
+            background=background,
+            callback_url=callback_url,
+        )
+        resolved_model = payload["model"]
     else:
-        raise ValueError("Unsupported image model. Use 'nano-banana-pro' or 'gpt-image-2'.")
+        raise ValueError(
+            "Unsupported image model. Use 'nano-banana-pro', 'gpt-image-2', "
+            f"one of {', '.join(GPT_IMAGE_2_5_ALIASES)}, "
+            f"or a full GPT Image 2.5 slug ({', '.join(sorted(GPT_IMAGE_2_5_MODELS))})."
+        )
 
     if dry_run:
         return _dry_run_result("market", resolved_model, payload, resolved)
