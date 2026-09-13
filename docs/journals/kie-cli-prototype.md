@@ -31,7 +31,29 @@
 | Task 26 | 2026-06-08 | Complete | Added first-class Bytedance Seedance support to the existing video CLI/MCP workflows. |
 | Task 27 | 2026-06-08 | Complete | Proved disposable live Seedance video generation with and without image references at low-cost settings. |
 | Task 28 | 2026-06-08 | Complete | Documented the live Seedance smoke proof, then prepared the Seedance implementation for commit and push. |
-| Task 29 | 2026-09-12 | Implementation complete / publication pending | Added a registry-driven KIE LLM interface for every currently documented Anthropic and OpenAI chat model, led by Claude Opus 4.8; public PR/merge and AdCrush adoption remain. |
+| Task 29 | 2026-09-12 | Complete | Added a registry-driven KIE LLM interface for every currently documented Anthropic and OpenAI chat model; released and adopted by AdCrush. |
+| Task 30 | 2026-09-12 | Complete | Preserved nested KIE provider error messages so consumers can retry transient upstream failures that KIE has mapped to HTTP 400. |
+
+---
+
+## Task 30: Preserve nested provider errors
+
+### Request and observed evidence
+
+While validating AdCrush against the released `claude-opus-4-7` route, KIE
+returned HTTP 400 with a JSON body carrying the real provider diagnostic at
+`error.message`: `Internal error, please try again later`. The CLI previously
+kept only a top-level `msg`, which was absent, and emitted the unhelpful
+`HTTP 400`. This made a retryable provider failure appear permanent.
+
+### Implementation and proof
+
+- `KieClient._decode_response` now selects `msg`, then nested
+  `error.message`, then the HTTP fallback, preserving the provider's actual
+  diagnostic without exposing credentials.
+- Added a focused response-decoding test for the exact nested error shape.
+- Planned proof: `pytest tests/test_cli_jobs.py tests/test_llm.py -q`, full
+  test suite, `git diff --check`, then a live CLI retry from AdCrush.
 
 ---
 
