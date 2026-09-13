@@ -29,8 +29,11 @@
       "liveCall": true,
       "supportsDryRun": true,
       "required": ["model", "prompt"],
-      "models": ["gpt-5-2", "gemini-3-pro"],
-      "notes": "Runs a synchronous chat completion, optionally with image URLs or local image files."
+      "models": [
+        "claude-opus-4-7", "claude-opus-4-8", "claude-fable-5", "claude-sonnet-5", "claude-haiku-4-5", "claude-opus-4-5", "claude-opus-4-6", "claude-opus-5", "claude-sonnet-4-5", "claude-sonnet-4-6",
+        "gpt-5-2", "gpt-5-4", "gpt-5-5", "gpt-5-6-luna", "gpt-6-astra", "gpt-5-6-terra", "gpt-5-6-sol", "gpt-codex", "gemini-3-pro"
+      ],
+      "notes": "Runs a synchronous Claude, GPT, Codex, or Gemini completion, optionally with image URLs or local image files."
     },
     {
       "name": "kie_suno_music",

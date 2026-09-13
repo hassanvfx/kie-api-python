@@ -324,19 +324,21 @@ Known live Seedance smoke result from June 8, 2026:
 
 ### `kie_chat_completion`
 
-Runs or dry-runs a synchronous chat completion.
+Runs or dry-runs a synchronous Claude, GPT/Codex, or Gemini completion. The
+model registry selects the provider protocol.
 
 Parameters:
 
 | Parameter | Type | Required | Default | Notes |
 |---|---|---:|---|---|
-| `model` | string | Yes | None | `gpt-5-2` or `gemini-3-pro`. |
+| `model` | string | Yes | None | Any supported Claude, GPT/Codex, or Gemini model; see `kie://models/supported`. |
 | `prompt` | string | Yes | None | User prompt. |
 | `image` | list[string]/null | No | null | Optional local paths or URLs. |
-| `reasoning_effort` | string | No | `high` | `low` or `high`. |
+| `reasoning_effort` | string | No | `high` | `low`, `medium`, `high`, or `xhigh` where supported. |
+| `thinking` | boolean | No | false | Enables KIE Claude thinking. |
 | `include_thoughts` | boolean | No | false | Gemini payload option. |
 | `web_search` | boolean | No | false | Enables web-search payload option. |
-| `max_completion_tokens` | integer/null | No | null | GPT completion cap. |
+| `max_completion_tokens` | integer/null | No | null | GPT-5.2 and Claude completion cap; current Responses models do not document it. |
 | `request_timeout` | number | No | `60` | HTTP timeout seconds. |
 | `upload_path` | string | No | `kie-mcp/chat` | Upload path for local image inputs. |
 | `dry_run` | boolean | No | true | Must be false for live call. |

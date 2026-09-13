@@ -43,6 +43,26 @@ class KieClient:
     def create_gemini_3_pro_chat_completion(self, payload: dict[str, Any]) -> dict[str, Any]:
         return self._post_json("/gemini-3-pro/v1/chat/completions", payload)
 
+    def create_anthropic_message(self, payload: dict[str, Any]) -> dict[str, Any]:
+        """Submit a KIE Claude request through its Anthropic Messages proxy."""
+        return self._post_json("/claude/v1/messages", payload)
+
+    def create_openai_response(self, payload: dict[str, Any]) -> dict[str, Any]:
+        """Submit a current KIE GPT/Codex request through Responses."""
+        return self._post_json("/codex/v1/responses", payload)
+
+    def create_llm_completion(self, *, transport: str, payload: dict[str, Any]) -> dict[str, Any]:
+        """Route a normalized LLM request without making callers duplicate URLs."""
+        if transport == "anthropic_messages":
+            return self.create_anthropic_message(payload)
+        if transport == "openai_responses":
+            return self.create_openai_response(payload)
+        if transport == "openai_chat":
+            return self.create_gpt_5_2_chat_completion(payload)
+        if transport == "gemini_chat":
+            return self.create_gemini_3_pro_chat_completion(payload)
+        raise ValueError(f"Unsupported LLM transport {transport!r}")
+
     def create_suno_music_task(self, payload: dict[str, Any]) -> dict[str, Any]:
         return self._post_json("/api/v1/generate", payload)
 

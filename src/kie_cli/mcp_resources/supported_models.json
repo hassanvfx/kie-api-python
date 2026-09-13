@@ -26,10 +26,13 @@
     },
     {
       "family": "chat",
-      "models": ["gpt-5-2", "gemini-3-pro"],
+      "models": [
+        "claude-opus-4-7", "claude-opus-4-8", "claude-fable-5", "claude-sonnet-5", "claude-haiku-4-5", "claude-opus-4-5", "claude-opus-4-6", "claude-opus-5", "claude-sonnet-4-5", "claude-sonnet-4-6",
+        "gpt-5-2", "gpt-5-4", "gpt-5-5", "gpt-5-6-luna", "gpt-6-astra", "gpt-5-6-terra", "gpt-5-6-sol", "gpt-codex", "gemini-3-pro"
+      ],
       "sync": true,
       "tools": ["kie_chat_completion"],
-      "notes": "OpenAI-compatible chat completion workflows with optional image inputs."
+      "notes": "Claude Messages, OpenAI Chat Completions, OpenAI Responses, and Gemini chat workflows with optional image inputs."
     },
     {
       "family": "suno",

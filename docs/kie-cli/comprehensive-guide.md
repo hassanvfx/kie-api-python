@@ -21,8 +21,9 @@ In its current production-facing scope, `kie-cli` supports:
 - **video generation**
   - `grok`
   - `veo3` with explicit Veo model variants
-- **OpenAI-compatible multimodal LLM inference**
-  - `gpt-5-2`
+- **multimodal LLM inference**
+  - all currently documented KIE Claude and OpenAI chat models
+  - `gemini-3-pro` on its established compatibility surface
 - **Suno audio workflows**
   - music generation
   - lyrics generation
@@ -44,7 +45,7 @@ This guide covers the currently strong and presentable command families:
 - `kie-cli video grok`
 - `kie-cli video veo3`
 - `kie-cli video seedance`
-- `kie-cli llm gpt-5-2`
+- `kie-cli llm MODEL`
 - `kie-cli suno music`
 - `kie-cli suno lyrics`
 - `kie-cli suno sounds`
@@ -69,7 +70,7 @@ For positioning purposes, do not present the Gemini family as part of the suppor
 | Video | `kie-cli video grok` | `grok-imagine/text-to-video` or `grok-imagine/image-to-video` | Yes | Optional | Async | Yes | Yes | Duration type changes between text-only and image mode |
 | Video | `kie-cli video veo3` | `veo3`, `veo3_fast`, or `veo3_lite` | Yes | Optional | Async | Yes | Core async contract covered; route and payload logic implemented | Generation type must match workflow intent |
 | Video | `kie-cli video seedance` | `bytedance/seedance-2-fast`, `bytedance/seedance-2`, or `bytedance/seedance-1.5-pro` | Yes | Optional | Async | Yes | Unit-covered; gated live scope added | Seedance 2.x frame inputs and multimodal reference inputs are mutually exclusive |
-| LLM | `kie-cli llm gpt-5-2` | `/gpt-5-2/v1/chat/completions` | Yes | Optional, repeated | Sync | No | Yes, including multimodal live test | Uses OpenAI-compatible request/response shape |
+| LLM | `kie-cli llm MODEL` | Claude `/claude/v1/messages`, GPT-5.2 chat completions, or current GPT/Codex `/codex/v1/responses` | Yes | Optional, repeated | Sync | No | Protocol dry-runs covered; existing GPT-5.2 live smoke | The model registry selects the correct payload and response normalizer |
 | Suno | `kie-cli suno music` | `/api/v1/generate` | Yes | No | Async | Yes | Yes | Live provider required explicit provider `--model` |
 | Suno | `kie-cli suno lyrics` | `/api/v1/lyrics` | Yes | No | Async | No | Yes | Live provider required `--callback-url` |
 | Suno | `kie-cli suno sounds` | `/api/v1/generate/sounds` | Yes | No | Async | Yes | Yes | Polled through Suno music status endpoint |
@@ -977,28 +978,32 @@ Seedance 1.5 Pro has a different schema:
 
 ---
 
-## OpenAI-compatible LLM command
+## Registry-backed LLM command
 
-## `kie-cli llm gpt-5-2`
+## `kie-cli llm MODEL`
 
 ## Purpose
 
-Runs a synchronous OpenAI-compatible chat completion against KIE GPT-5.2.
+Runs a synchronous completion through the transport documented for `MODEL`.
+Claude models use Anthropic Messages, GPT-5.2 uses legacy Chat Completions,
+and current GPT/Codex models use OpenAI Responses. Gemini's existing chat
+completion surface remains available.
 
 This command supports:
 
 - text-only chat completion
 - multimodal text + image input
 - reasoning effort
-- KIE/OpenAI-style web search tool injection
+- model-specific reasoning, thinking, and web-search options
 
 ## Syntax
 
 ```bash
-kie-cli llm gpt-5-2 \
+kie-cli llm MODEL \
   (--prompt TEXT | --prompt-file FILE) \
   [--image URL_OR_PATH ...] \
-  [--reasoning-effort low|high] \
+  [--reasoning-effort low|medium|high|xhigh] \
+  [--thinking] \
   [--web-search] \
   [--upload-path PATH] \
   [--dry-run] \
@@ -1011,6 +1016,17 @@ kie-cli llm gpt-5-2 \
 .venv/bin/kie-cli llm gpt-5-2 \
   --prompt "Write a concise launch description for a premium smartwatch." \
   --reasoning-effort high \
+  --json
+```
+
+## Example: Claude Opus 4.8 vision judgment
+
+```bash
+.venv/bin/kie-cli llm claude-opus-4-8 \
+  --prompt "Review this image for text accuracy and composition." \
+  --image ./reference.png \
+  --thinking \
+  --dry-run \
   --json
 ```
 

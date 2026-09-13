@@ -11,11 +11,10 @@ from .client import KieClient, KieUploadClient
 from .config import load_config
 from .jobs import build_job_record, write_job_record
 from .llm import (
-    GEMINI_3_PRO,
-    GPT_5_2,
-    build_gemini_vision_payload,
-    build_gpt_5_2_chat_payload,
-    normalize_chat_completion,
+    build_llm_payload,
+    normalize_llm_response,
+    route_name,
+    resolve_llm_model,
 )
 from .media import resolve_media_inputs
 from .payloads import (
@@ -432,6 +431,7 @@ def kie_chat_completion(
     image: list[str] | None = None,
     reasoning_effort: str = "high",
     include_thoughts: bool = False,
+    thinking: bool = False,
     web_search: bool = False,
     max_completion_tokens: int | None = None,
     request_timeout: float = 60,
@@ -451,34 +451,28 @@ def kie_chat_completion(
     )
     image_urls = [item.resolved_url for item in resolved]
 
-    if model == GPT_5_2:
-        payload = build_gpt_5_2_chat_payload(
-            prompt=prompt,
-            image_urls=image_urls,
-            reasoning_effort=reasoning_effort,
-            web_search=web_search,
-            max_completion_tokens=max_completion_tokens,
-        )
-        if dry_run:
-            result = _dry_run_result("chat_completions", model, payload, resolved)
-            result["kind"] = "chat_completions"
-            return result
-        response = KieClient(config, request_timeout=request_timeout).create_gpt_5_2_chat_completion(payload)
-    elif model == GEMINI_3_PRO:
-        payload = build_gemini_vision_payload(
-            prompt=prompt,
-            image_urls=image_urls,
-            reasoning_effort=reasoning_effort,
-            include_thoughts=include_thoughts,
-            web_search=web_search,
-        )
-        if dry_run:
-            return _dry_run_result("chat_completions", model, payload, resolved)
-        response = KieClient(config, request_timeout=request_timeout).create_gemini_3_pro_chat_completion(payload)
-    else:
-        raise ValueError("Unsupported chat model. Use 'gpt-5-2' or 'gemini-3-pro'.")
+    spec = resolve_llm_model(model)
+    payload = build_llm_payload(
+        model=model,
+        prompt=prompt,
+        image_urls=image_urls,
+        reasoning_effort=reasoning_effort,
+        include_thoughts=include_thoughts,
+        thinking=thinking,
+        web_search=web_search,
+        max_completion_tokens=max_completion_tokens,
+    )
+    if dry_run:
+        route = route_name(spec.transport)
+        result = _dry_run_result(route, model, payload, resolved)
+        result["kind"] = route
+        return result
 
-    result = normalize_chat_completion(response, model=model)
+    response = KieClient(config, request_timeout=request_timeout).create_llm_completion(
+        transport=spec.transport,
+        payload=payload,
+    )
+    result = normalize_llm_response(response, model=model)
     result["resolvedMedia"] = [asdict(item) for item in resolved]
     return result
 

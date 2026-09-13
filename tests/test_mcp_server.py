@@ -4,6 +4,7 @@ import json
 import pytest
 
 from kie_cli import mcp_server
+from kie_cli.llm import LLM_MODELS
 
 
 def test_mcp_supported_models_resource_is_valid_json():
@@ -12,6 +13,8 @@ def test_mcp_supported_models_resource_is_valid_json():
     assert payload["schemaVersion"] == 1
     assert any(workflow["family"] == "image" for workflow in payload["workflows"])
     assert any("kie_generate_image" in workflow["tools"] for workflow in payload["workflows"])
+    chat = next(workflow for workflow in payload["workflows"] if workflow["family"] == "chat")
+    assert set(chat["models"]) == set(LLM_MODELS)
 
 
 def test_mcp_tool_contracts_resource_is_valid_json():
@@ -20,6 +23,8 @@ def test_mcp_tool_contracts_resource_is_valid_json():
 
     assert "kie_generate_image" in names
     assert "kie_wait_for_job" in names
+    chat = next(tool for tool in payload["tools"] if tool["name"] == "kie_chat_completion")
+    assert set(chat["models"]) == set(LLM_MODELS)
 
 
 def test_mcp_agent_quickstart_resource_mentions_dry_run():
@@ -96,6 +101,20 @@ def test_mcp_chat_dry_run_builds_gpt_payload():
     assert result["kind"] == "chat_completions"
     assert result["model"] == "gpt-5-2"
     assert result["payload"]["max_completion_tokens"] == 128
+
+
+def test_mcp_chat_dry_run_builds_claude_payload():
+    result = mcp_server.kie_chat_completion(
+        "claude-opus-4-8",
+        "describe this image",
+        image=["https://example.com/ref.png"],
+        thinking=True,
+    )
+
+    assert result["status"] == "dry_run"
+    assert result["route"] == "anthropic_messages"
+    assert result["payload"]["thinkingFlag"] is True
+    assert result["payload"]["messages"][0]["content"][1]["source"]["url"] == "https://example.com/ref.png"
 
 
 def test_mcp_suno_music_dry_run_builds_payload():
