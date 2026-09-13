@@ -1,7 +1,11 @@
 import json
 
+import pytest
+
 from kie_cli import cli
+from kie_cli.client import KieClient
 from kie_cli.cli import main
+from kie_cli.errors import ApiError
 from kie_cli.jobs import read_job_record
 
 
@@ -64,6 +68,13 @@ def fake_config():
     return object()
 
 
+class FakeHttpErrorResponse:
+    status_code = 400
+
+    def json(self):
+        return {"type": "error", "error": {"type": "api_error", "message": "Internal error, please try again later"}}
+
+
 def market_status(task_id="task_123", state="success", model="nano-banana-pro"):
     return {
         "code": 200,
@@ -98,6 +109,14 @@ def install_fake_client(monkeypatch):
     FakeKieClient.suno_lyrics_status_responses = []
     monkeypatch.setattr(cli, "load_config", fake_config)
     monkeypatch.setattr(cli, "KieClient", FakeKieClient)
+
+
+def test_client_preserves_nested_provider_error_message():
+    with pytest.raises(ApiError, match="Internal error, please try again later") as caught:
+        KieClient._decode_response(FakeHttpErrorResponse())
+
+    assert caught.value.code == 400
+    assert caught.value.raw["error"]["type"] == "api_error"
 
 
 def test_cli_wait_requires_model_without_job_file(monkeypatch, capsys):
