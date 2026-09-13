@@ -31,6 +31,78 @@
 | Task 26 | 2026-06-08 | Complete | Added first-class Bytedance Seedance support to the existing video CLI/MCP workflows. |
 | Task 27 | 2026-06-08 | Complete | Proved disposable live Seedance video generation with and without image references at low-cost settings. |
 | Task 28 | 2026-06-08 | Complete | Documented the live Seedance smoke proof, then prepared the Seedance implementation for commit and push. |
+| Task 29 | 2026-09-12 | Implementation complete / publication pending | Added a registry-driven KIE LLM interface for every currently documented Anthropic and OpenAI chat model, led by Claude Opus 4.8; public PR/merge and AdCrush adoption remain. |
+
+---
+
+## Task 29: KIE Claude and OpenAI LLM transports
+
+### Request
+
+Make the public `kie-cli` a prerequisite for AdCrush's model upgrade: support
+all currently documented KIE Anthropic and OpenAI chat models, including
+`claude-opus-4-8`, create and merge a public pull request, then update the
+AdCrush CLI to use the released interface.
+
+### Contract and boundary
+
+- `kie-cli llm <model>` accepts the documented Claude and OpenAI models from a
+  single registry; Gemini remains compatible through its existing surface.
+- A registry entry declares the protocol rather than treating every model as
+  OpenAI chat completions: Claude uses `/claude/v1/messages`, GPT 5.2 keeps
+  its legacy chat-completions endpoint, and current GPT/Codex models use
+  `/codex/v1/responses`.
+- Each protocol gets its own payload builder and response normaliser, while
+  CLI and MCP return the existing stable result envelope (`ok`, `status`,
+  `model`, `text`, `usage`, `raw`). No live calls or spend are needed to prove
+  payload construction and dispatch.
+- Scope: `src/kie_cli/{llm,client,cli,mcp_server}.py`, chat tests/resources,
+  README/MCP docs, and this journal. Excluded: image/video/Suno behavior,
+  changing KIE credentials, and automatically discovering undocumented model
+  names.
+
+### Handoff topology and proof
+
+One coherent handoff owns the registry, transports, normalisation, CLI/MCP
+dispatch, documentation, and dry-run matrix. It is locally proven by a test
+per protocol and model-registry coverage, dry-runs for Claude Opus 4.8 and a
+Responses model with image input, the full test suite, and `git diff --check`.
+After review, it is pushed in one public PR and merged. Only then does AdCrush
+adopt the released CLI interface in a dependent handoff.
+
+### Implementation and proof
+
+KIE's current public catalog lists Claude Opus 4.7/4.8, Fable 5, Sonnet 5,
+Haiku 4.5, Opus 4.5/4.6/5, Sonnet 4.5/4.6 and GPT 5.2, 5.4, 5.5, 5.6
+Luna/Terra/Sol, 6 Astra, plus GPT Codex. The published Claude Opus 4.8
+contract uses `POST /claude/v1/messages`; GPT 5.4+ use
+`POST /codex/v1/responses`. Existing code supports only GPT 5.2 and Gemini 3
+Pro, proving that a transport split is required before simply expanding an
+argument choice list.
+
+Implemented one model registry shared by the CLI, MCP tool, client routing,
+and package resources. The registry makes Claude models use
+`/claude/v1/messages`, retains GPT-5.2's legacy chat-completions endpoint,
+and sends the current GPT/Codex catalog to `/codex/v1/responses`. It also
+normalizes each response shape into the existing result envelope and retains
+Gemini's compatibility surface. The MCP resource tests assert that their
+static published model lists exactly match this registry, so documentation
+cannot silently diverge from the executable contract.
+
+No provider call was made. Proof completed on 2026-09-12:
+
+```bash
+.venv/bin/python -m pytest -q
+git diff --check
+.venv/bin/kie-cli llm claude-opus-4-8 --prompt 'Review the label.' --thinking --dry-run --json
+.venv/bin/kie-cli llm gpt-5-5 --prompt 'Review the label.' --reasoning-effort xhigh --dry-run --json
+```
+
+Result: 108 passed, 12 live-gated tests skipped; both dry-runs selected their
+documented protocol and constructed the expected payload. The next step is to
+commit only the registry, client, CLI/MCP, test, resource, and documentation
+files; push `codex/kie-llm-transports`; create and merge the public PR; then
+adopt the released package in AdCrush.
 
 ---
 

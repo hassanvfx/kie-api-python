@@ -16,9 +16,13 @@ from .jobs import build_job_record, read_job_record, write_job_record
 from .llm import (
     GEMINI_3_PRO,
     GPT_5_2,
+    SUPPORTED_LLM_MODELS,
+    build_llm_payload,
     build_gemini_vision_payload,
-    build_gpt_5_2_chat_payload,
+    normalize_llm_response,
     normalize_chat_completion,
+    route_name,
+    resolve_llm_model,
 )
 from .media import resolve_media_inputs
 from .polling import get_status_once, poll_until_complete
@@ -163,11 +167,12 @@ def build_parser() -> argparse.ArgumentParser:
     video.add_argument("--dry-run", action="store_true")
     video.add_argument("--json", action="store_true")
 
-    llm = subparsers.add_parser("llm", help="Run OpenAI-compatible KIE text completion.")
-    llm.add_argument("model", choices=[GPT_5_2])
+    llm = subparsers.add_parser("llm", help="Run a KIE Claude, GPT, Codex, or Gemini completion.")
+    llm.add_argument("model", choices=SUPPORTED_LLM_MODELS)
     add_prompt_args(llm)
     add_image_args(llm)
-    llm.add_argument("--reasoning-effort", default="high", choices=["low", "high"])
+    llm.add_argument("--reasoning-effort", default="high", choices=["low", "medium", "high", "xhigh"])
+    llm.add_argument("--thinking", action="store_true", help="Enable KIE Claude thinking when supported.")
     llm.add_argument("--request-timeout", type=float, default=60)
     llm.add_argument("--max-completion-tokens", type=int)
     llm.add_argument("--web-search", action="store_true")
@@ -559,12 +564,15 @@ def command_llm(args: argparse.Namespace) -> dict[str, Any]:
         dry_run=args.dry_run,
     )
     image_urls = [item.resolved_url for item in resolved]
-    payload = build_gpt_5_2_chat_payload(
+    spec = resolve_llm_model(args.model)
+    payload = build_llm_payload(
+        model=args.model,
         prompt=prompt,
         image_urls=image_urls,
         reasoning_effort=args.reasoning_effort,
         web_search=args.web_search,
         max_completion_tokens=args.max_completion_tokens,
+        thinking=args.thinking,
     )
 
     if args.dry_run:
@@ -572,13 +580,16 @@ def command_llm(args: argparse.Namespace) -> dict[str, Any]:
             model=args.model,
             payload=payload,
             resolved_media=resolved,
-            kind="chat_completions",
+            kind=route_name(spec.transport),
         )
-        result["kind"] = "chat_completions"
+        result["kind"] = route_name(spec.transport)
         return result
 
-    response = KieClient(config, request_timeout=args.request_timeout).create_gpt_5_2_chat_completion(payload)
-    result = normalize_chat_completion(response, model=args.model)
+    response = KieClient(config, request_timeout=args.request_timeout).create_llm_completion(
+        transport=spec.transport,
+        payload=payload,
+    )
+    result = normalize_llm_response(response, model=args.model)
     result["resolvedMedia"] = [asdict(item) for item in resolved]
     return result
 

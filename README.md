@@ -362,21 +362,25 @@ Live Seedance smoke proof from June 8, 2026:
 
 ### `kie-cli llm`
 
-Run a synchronous OpenAI-compatible KIE chat completion.
+Run a synchronous Claude, GPT, Codex, or Gemini completion. The model selects
+the KIE protocol: Claude uses `/claude/v1/messages`; current GPT/Codex models
+use `/codex/v1/responses`; GPT-5.2 and Gemini retain chat-completions
+endpoints. All return the same result envelope.
 
 ```bash
-kie-cli llm gpt-5-2 (--prompt TEXT | --prompt-file FILE) [options]
+kie-cli llm MODEL (--prompt TEXT | --prompt-file FILE) [options]
 ```
 
 Parameters:
 
 | Parameter | Required | Default | Notes |
 |---|---:|---|---|
-| `model` | Yes | `gpt-5-2` | Currently only `gpt-5-2`. |
+| `model` | Yes | None | Any supported Claude, GPT/Codex, or Gemini model. |
 | `--prompt` | Yes* | None | Inline prompt. |
 | `--prompt-file` | Yes* | None | Prompt file. |
 | `--image` | No | repeatable empty list | Optional image input, local file or URL. |
-| `--reasoning-effort` | No | `high` | `low` or `high`. |
+| `--reasoning-effort` | No | `high` | `low`, `medium`, `high`, or `xhigh` where supported. |
+| `--thinking` | No | false | Enables KIE Claude thinking. |
 | `--request-timeout` | No | `60` | HTTP timeout in seconds. |
 | `--max-completion-tokens` | No | None | Completion token cap. |
 | `--web-search` | No | false | Enables web search field in payload. |
@@ -396,6 +400,22 @@ kie-cli llm gpt-5-2 \
   --max-completion-tokens 256 \
   --json
 ```
+
+```bash
+kie-cli llm claude-opus-4-8 \
+  --prompt "Review this image for spelling and composition." \
+  --image ./reference.png \
+  --thinking \
+  --dry-run \
+  --json
+```
+
+Supported Claude models: `claude-opus-4-7`, `claude-opus-4-8`,
+`claude-fable-5`, `claude-sonnet-5`, `claude-haiku-4-5`, `claude-opus-4-5`,
+`claude-opus-4-6`, `claude-opus-5`, `claude-sonnet-4-5`, and
+`claude-sonnet-4-6`. Supported OpenAI models: `gpt-5-2`, `gpt-5-4`,
+`gpt-5-5`, `gpt-5-6-luna`, `gpt-6-astra`, `gpt-5-6-terra`, `gpt-5-6-sol`, and
+`gpt-codex`.
 
 ### `kie-cli gemini`
 
