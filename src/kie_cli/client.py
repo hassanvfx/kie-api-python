@@ -108,8 +108,15 @@ class KieClient:
             ) from exc
 
         if response.status_code >= 400:
+            # Several KIE proxy endpoints return their useful provider error
+            # under ``error.message`` instead of the top-level ``msg``. Keep
+            # that diagnostic intact: callers need it to distinguish a real
+            # bad request from a transient upstream failure that KIE mapped to
+            # an HTTP 400.
+            nested_error = data.get("error")
+            nested_message = nested_error.get("message") if isinstance(nested_error, dict) else None
             raise ApiError(
-                str(data.get("msg") or f"HTTP {response.status_code}"),
+                str(data.get("msg") or nested_message or f"HTTP {response.status_code}"),
                 code=data.get("code", response.status_code),
                 raw=data,
             )
